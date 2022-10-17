@@ -19,7 +19,7 @@ class AppLogo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           width: logoWidth,
           child: Image.asset(
             'assets/images/logo.png',
