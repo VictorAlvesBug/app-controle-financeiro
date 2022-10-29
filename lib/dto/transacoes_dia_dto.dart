@@ -9,8 +9,15 @@ class TransacoesDiaDTO {
   final List<TransacaoDTO> listaTransacoes;
   final DateTime data;
 
-  static List<TransacoesDiaDTO> convertFrom(
-      List<TransacaoDTO> listaTransacoes) {
+  static List<TransacoesDiaDTO> getListaTransacoesMes(
+    List<TransacaoDTO> listaTransacoes, {
+    required int mes,
+    required int ano,
+  }) {
+
+    listaTransacoes = listaTransacoes.where((transacao) =>
+      transacao.getMes() == mes && transacao.getAno() == ano).toList();
+
     listaTransacoes.sort((tranA, tranB) {
       return (tranA.data.isBefore(tranB.data)) ? 1 : -1;
     });
@@ -20,12 +27,6 @@ class TransacoesDiaDTO {
       bool diaJaAdicionado = transacoesDia.any((transacaoDia) {
         return transacaoDia.data == transacao.data;
       });
-
-      /*bool diaJaAdicionado = transacoesDia.any((transacaoDia) {
-        return transacaoDia.listaTransacoes.any((item) {
-          return item.data == transacao.data;
-        });
-      });*/
 
       if (diaJaAdicionado) {
         transacoesDia

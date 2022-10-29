@@ -4,17 +4,28 @@ import 'package:intl/intl.dart';
 import '../dto/resumo_dto.dart';
 import '../utils/utils.dart';
 
-class ResumoBox extends StatelessWidget {
-
-  const ResumoBox({
+class ResumoBox extends StatefulWidget {
+  ResumoBox({
     Key? key,
     required this.resumoDto,
+    this.callbackAtualizacaoCascata,
   }) : super(key: key);
 
   final ResumoDTO resumoDto;
+  var callbackAtualizacaoCascata;
 
   @override
+  State<ResumoBox> createState() => _ResumoBoxState();
+}
+
+class _ResumoBoxState extends State<ResumoBox> {
+  @override
   Widget build(BuildContext context) {
+    final dataAtual = DateTime.now();
+    final strMesAtual = DateFormat.MMMM().format(dataAtual);
+    final anoAtual = DateFormat.y().format(dataAtual);
+    final mesAnoAtualFormatado = '$strMesAtual/$anoAtual';
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -29,15 +40,34 @@ class ResumoBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(onTap: () { }, child: Icon(Icons.keyboard_arrow_left, color: Colors.white70,)),
-                Text(
-                  resumoDto.getMesAnoFormatado(),
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
+                InkWell(
+                    onTap: () {
+                      widget.resumoDto.acessarMesAnterior();
+                      setState(() {});
+                      //widget.callbackAtualizacaoCascata(widget.resumoDto);
+                    },
+                    child: Icon(Icons.keyboard_arrow_left,
+                        color: Colors.white70, size: 28)),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.resumoDto.getMesAnoFormatado(),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                      fontWeight: mesAnoAtualFormatado == widget.resumoDto.getMesAnoFormatado() ? FontWeight.bold : FontWeight.normal,
+                    ),
                   ),
                 ),
-                InkWell(onTap: () { }, child: Icon(Icons.keyboard_arrow_right, color: Colors.white70,)),
+                InkWell(
+                    onTap: () {
+                      widget.resumoDto.acessarMesPosterior();
+                      setState(() {});
+                      //widget.callbackAtualizacaoCascata(widget.resumoDto);
+                    },
+                    child: Icon(Icons.keyboard_arrow_right,
+                        color: Colors.white70, size: 28)),
               ],
             ),
             const SizedBox(height: 10),
@@ -50,7 +80,7 @@ class ResumoBox extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              Utils.formatarValor(resumoDto.saldoEmConta),
+              Utils.formatarValor(widget.resumoDto.saldoEmConta),
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 24,
@@ -65,7 +95,7 @@ class ResumoBox extends StatelessWidget {
                     Container(
                       width: 40,
                       height: 40,
-                      child: Icon(Icons.arrow_upward),
+                      child: Icon(Icons.arrow_upward, color: Colors.white70),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(20),
@@ -84,7 +114,8 @@ class ResumoBox extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          Utils.formatarValor(resumoDto.totalReceitasMes),
+                          Utils.formatarValor(
+                              widget.resumoDto.totalReceitasMes),
                           style: TextStyle(
                             color: Colors.green,
                             fontSize: 20,
@@ -99,7 +130,7 @@ class ResumoBox extends StatelessWidget {
                     Container(
                       width: 40,
                       height: 40,
-                      child: Icon(Icons.arrow_downward),
+                      child: Icon(Icons.arrow_downward, color: Colors.white70),
                       decoration: BoxDecoration(
                         color: Colors.deepOrange,
                         borderRadius: BorderRadius.circular(20),
@@ -118,7 +149,8 @@ class ResumoBox extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          Utils.formatarValor(resumoDto.totalDespesasMes),
+                          Utils.formatarValor(
+                              widget.resumoDto.totalDespesasMes),
                           style: TextStyle(
                             color: Colors.deepOrange,
                             fontSize: 20,

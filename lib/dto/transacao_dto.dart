@@ -41,4 +41,12 @@ class TransacaoDTO {
   bool ehReceita(){
     return tipo == TipoTransacaoEnum.Receita;
   }
+
+  int getMes (){
+    return int.parse(DateFormat.M().format(data));
+  }
+
+  int getAno (){
+    return int.parse(DateFormat.y().format(data));
+  }
 }
