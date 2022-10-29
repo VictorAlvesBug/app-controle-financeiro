@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../dto/resumo_dto.dart';
 
 class ResumoBox extends StatelessWidget {
 
   const ResumoBox({
     Key? key,
-    required this.mes,
-    required this.saldoEmConta,
-    required this.totalReceitasMes,
-    required this.totalDespesasMes,
+    required this.resumoDto,
   }) : super(key: key);
 
-  final String mes;
-  final double saldoEmConta;
-  final double totalReceitasMes;
-  final double totalDespesasMes;
+  final ResumoDTO resumoDto;
 
   @override
   Widget build(BuildContext context) {
-    String saldoEmContaFormatado = saldoEmConta.toString();
-    String totalReceitasMesFormatado = totalReceitasMes.toString();
-    String totalDespesasMesFormatado = totalDespesasMes.toString();
+
+    final formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
+
+    String saldoEmContaFormatado = formatoReal.format(resumoDto.saldoEmConta);
+    String totalReceitasMesFormatado = formatoReal.format(resumoDto.totalReceitasMes);
+    String totalDespesasMesFormatado = formatoReal.format(resumoDto.totalDespesasMes);
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: const Color(0xFF444444),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 10),
           Text(
-            mes,
+            resumoDto.mes,
             style: TextStyle(
               color: Colors.white70,
               fontSize: 14,
