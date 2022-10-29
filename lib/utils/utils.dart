@@ -7,6 +7,11 @@ class Utils{
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  static String formatarValor(double valor){
+    var formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
+    return formatoReal.format(valor);
+  }
+
   static String formatarData_ddMMyyyy(DateTime data){
     String dia = DateFormat.d().format(data).padLeft(2, '0');
     String mes = DateFormat.M().format(data).padLeft(2, '0');

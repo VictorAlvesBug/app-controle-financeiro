@@ -16,15 +16,6 @@ class TransacaoDTO {
   final DateTime data;
   final String descricao;
 
-  String getValorFormatado({bool comSinal: false}){
-    var formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
-
-    if(comSinal && tipo == TipoTransacaoEnum.Despesa){
-      return '- ${formatoReal.format(valor)}';
-    }
-    return formatoReal.format(valor);
-  }
-
   String getDescricaoResumida({int maxLength = 0}){
     var larguraDescricao = descricao.length;
 

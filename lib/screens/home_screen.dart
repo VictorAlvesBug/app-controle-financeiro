@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           SizedBox(height: 5),
                                           Text(
-                                            transacao.getValorFormatado(comSinal: true),
+                                              Utils.formatarValor(transacao.valor),
                                             style: TextStyle(
                                               color: transacao.getCorTipoTransacao(),
                                               fontSize: 20,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../dto/resumo_dto.dart';
+import '../utils/utils.dart';
 
 class ResumoBox extends StatelessWidget {
 
@@ -14,13 +15,6 @@ class ResumoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
-
-    String saldoEmContaFormatado = formatoReal.format(resumoDto.saldoEmConta);
-    String totalReceitasMesFormatado = formatoReal.format(resumoDto.totalReceitasMes);
-    String totalDespesasMesFormatado = formatoReal.format(resumoDto.totalDespesasMes);
-
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -32,12 +26,19 @@ class ResumoBox extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              resumoDto.getMesAnoFormatado(),
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(onTap: () { }, child: Icon(Icons.keyboard_arrow_left, color: Colors.white70,)),
+                Text(
+                  resumoDto.getMesAnoFormatado(),
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+                InkWell(onTap: () { }, child: Icon(Icons.keyboard_arrow_right, color: Colors.white70,)),
+              ],
             ),
             const SizedBox(height: 10),
             const Text(
@@ -49,7 +50,7 @@ class ResumoBox extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              saldoEmContaFormatado,
+              Utils.formatarValor(resumoDto.saldoEmConta),
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 24,
@@ -83,7 +84,7 @@ class ResumoBox extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          totalReceitasMesFormatado,
+                          Utils.formatarValor(resumoDto.totalReceitasMes),
                           style: TextStyle(
                             color: Colors.green,
                             fontSize: 20,
@@ -117,7 +118,7 @@ class ResumoBox extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          totalDespesasMesFormatado,
+                          Utils.formatarValor(resumoDto.totalDespesasMes),
                           style: TextStyle(
                             color: Colors.deepOrange,
                             fontSize: 20,
