@@ -39,14 +39,6 @@ class TransacaoDTO {
     return descricao;
   }
 
-  String getDataFormatada(){
-    String dia = DateFormat.d().format(data).padLeft(2, '0');
-    String mes = DateFormat.M().format(data).padLeft(2, '0');
-    String ano = DateFormat.y().format(data).padLeft(4, '0');
-
-    return '$dia/$mes/$ano';
-  }
-
   Color getCorTipoTransacao(){
     if(ehReceita()){
       return Colors.green;

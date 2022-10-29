@@ -1,1 +1,2 @@
-- Se o texto da transação for muito grande, o layout quebra, pois o ellipsis não está funcionando na lista de transações
+- Implementar responsividade no texto das transações para que evite quebra de layout (ellipsis).
+- Ajustar nomes dos meses e dos dias da semana para aparecer em português.
