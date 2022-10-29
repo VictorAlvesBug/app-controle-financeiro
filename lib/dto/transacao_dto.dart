@@ -48,10 +48,14 @@ class TransacaoDTO {
   }
 
   Color getCorTipoTransacao(){
-    if(tipo == TipoTransacaoEnum.Receita){
+    if(ehReceita()){
       return Colors.green;
     }
 
     return Colors.deepOrange;
+  }
+
+  bool ehReceita(){
+    return tipo == TipoTransacaoEnum.Receita;
   }
 }

@@ -65,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             width: 50,
                             height: 50,
+                            child: transacao.ehReceita() ? Icon(Icons.arrow_upward) : Icon(Icons.arrow_downward),
                             decoration: BoxDecoration(
                               color: transacao.getCorTipoTransacao(),
                               borderRadius: BorderRadius.circular(25),
