@@ -1,2 +1,3 @@
 - Implementar responsividade no texto das transações para que evite quebra de layout (ellipsis).
 - Ajustar nomes dos meses e dos dias da semana para aparecer em português.
+- Ajustar listagem de transações para evitar quebra de layout.

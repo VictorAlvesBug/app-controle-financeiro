@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
+import '../components/action_button.dart';
+import '../components/expandable_fab.dart';
 import '../dto/resumo_dto.dart';
 import '../dto/transacao_dto.dart';
 import '../dto/transacoes_dia_dto.dart';
@@ -45,6 +47,25 @@ class _HomeScreenState extends State<HomeScreen> {
         data: DateTime(2022, 10, 24),
         descricao: 'Mensalidade da Academia'),*/
   ];
+
+  static const _actionTitles = ['Adicionar Receita', 'Adicionar Despesa'];
+
+  void _showAction(BuildContext context, int index) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(_actionTitles[index]),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,12 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
-                                          /*Text(
-                                            Utils.formatarData_ddMMyyyy(transacao.data),
-                                            style: TextStyle(
-                                                color: Colors.white70, fontSize: 12),
-                                          ),
-                                          SizedBox(height: 5),*/
                                           Text(
                                               Utils.formatarValor(transacao.valor),
                                             style: TextStyle(
@@ -204,11 +219,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Adicionar',
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.green,
+      floatingActionButton: ExpandableFab(
+        distance: 112.0,
+        children: [
+          ActionButton(
+            onPressed: () => _showAction(context, 0),
+            color: Colors.green,
+            label: 'Receita',
+            icon: const Icon(Icons.arrow_upward),
+          ),
+          ActionButton(
+            onPressed: () => _showAction(context, 1),
+            color: Colors.deepOrange,
+            label: 'Despesa',
+            icon: const Icon(Icons.arrow_downward),
+          ),
+        ],
       ),
     );
   }
