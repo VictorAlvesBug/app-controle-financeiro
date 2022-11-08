@@ -1,20 +1,20 @@
 import 'package:controle_financeiro/components/app_logo.dart';
 import 'package:controle_financeiro/screens/home_screen.dart';
 import 'package:controle_financeiro/screens/register_screen.dart';
-import 'package:controle_financeiro/services/login_service.dart';
 import 'package:controle_financeiro/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String id = 'login_screen';
+class CadastrarTransacaoScreen extends StatefulWidget {
+  static const String id = 'cadastrar_transacao_screen';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const CadastrarTransacaoScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<CadastrarTransacaoScreen> createState() => _CadastrarTransacaoScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CadastrarTransacaoScreenState extends State<CadastrarTransacaoScreen> {
+
   var userEmail = 'email@fake.com';
   var userPassword = '123';
 
@@ -50,27 +50,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    LoginService().login(userEmail, userPassword);
-
-                    /*const targetEmail = 'email@fake.com';
+                    const targetEmail = 'email@fake.com';
                     const targetPassword = '123';
-                    if (targetEmail == userEmail &&
-                        targetPassword == userPassword) {
-                      Utils.message(
-                          context, 'Login fake realizado com sucesso');
+                    if(targetEmail == userEmail && targetPassword == userPassword){
+                      Utils.message(context, 'Login fake realizado com sucesso');
                       Navigator.pushReplacementNamed(context, HomeScreen.id);
-                    } else {
+                    }
+                    else {
                       Utils.message(context, 'Login não implementado...');
-                      Utils.message(context,
-                          'Tente logar com e-mail: $targetEmail  e senha: $targetPassword');
-                    }*/
+                      Utils.message(context, 'Tente logar com e-mail: $targetEmail  e senha: $targetPassword');
+                    }
                   },
                   child: const Text('Entrar'),
                 ),
                 const SizedBox(height: 5),
-                const Center(
-                    child:
-                        Text('-------------------- ou --------------------')),
+                const Center(child: Text('-------------------- ou --------------------')),
                 const SizedBox(height: 5),
                 ElevatedButton(
                   onPressed: () {
@@ -79,7 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       side: const BorderSide(color: Colors.blue),
-                      foregroundColor: Colors.blue),
+                      foregroundColor: Colors.blue
+                  ),
                   child: const Text('Cadastre-se'),
                 ),
               ],

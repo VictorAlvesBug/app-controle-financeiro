@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:controle_financeiro/components/resumo_box.dart';
@@ -25,47 +26,61 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<TransacaoDTO> listaTransacoes = [
-    /*TransacaoDTO(
-        tipo: TipoTransacaoEnum.Receita,
-        valor: 4321,
-        data: DateTime(2022, 10, 20),
-        descricao: 'Salário Mensal'),
-    TransacaoDTO(
-        tipo: TipoTransacaoEnum.Despesa,
-        valor: 123,
-        data: DateTime(2022, 9, 16),
-        descricao: 'Conta de Água'),
-    TransacaoDTO(
-        tipo: TipoTransacaoEnum.Receita,
-        valor: 45.84,
-        data: DateTime(2022, 10, 24),
-        descricao: 'Cashbask Amazon'),
-    TransacaoDTO(
-        tipo: TipoTransacaoEnum.Despesa,
-        valor: 99.99,
-        data: DateTime(2022, 10, 24),
-        descricao: 'Mensalidade da Academia'),*/
-  ];
+  List<TransacaoDTO> listaTransacoes = [];
+  
+  String descricao = "";
+  String valor = "";
 
-  static const _actionTitles = ['Adicionar Receita', 'Adicionar Despesa'];
+  TextEditingController _descricaoController = TextEditingController();
+  TextEditingController _valorController = TextEditingController();
 
-  void _showAction(BuildContext context, int index) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Text(_actionTitles[index]),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Fechar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  Future<void> _displayTextInputDialog(BuildContext context, TipoTransacaoEnum tipoTransacao) async {
+   return showDialog(
+       context: context,
+       builder: (context) {
+         return AlertDialog(
+           backgroundColor: Color.fromARGB(255, 68, 68, 68),
+           title: Text('Adicionar ${tipoTransacao.name}', style: TextStyle(color: Colors.white70)),
+           content: Column(
+             children: [
+               TextField(
+                 onChanged: (value) {
+                   setState(() {
+                     descricao = value;
+                   });
+                 },
+                 controller: _descricaoController,
+                 decoration: const InputDecoration(hintText: "Descrição"),
+               ),
+               TextField(
+                 onChanged: (value) {
+                   setState(() {
+                     valor = value;
+                   });
+                 },
+                 controller: _valorController,
+                 decoration: const InputDecoration(hintText: "Valor"),
+               ),
+             ],
+           ),
+           actions: <Widget>[
+             ElevatedButton(
+               /*color: Colors.green,
+               textColor: Colors.white,*/
+               child: const Text('OK'),
+               onPressed: () {
+                 setState(() {
+                   print('Descrição: $descricao');
+                   print('Valor: $valor');
+                   Navigator.pop(context);
+                 });
+               },
+             ),
+  
+           ],
+         );
+       });
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -223,13 +238,13 @@ class _HomeScreenState extends State<HomeScreen> {
         distance: 112.0,
         children: [
           ActionButton(
-            onPressed: () => _showAction(context, 0),
+            onPressed: () => _displayTextInputDialog(context, TipoTransacaoEnum.Receita),
             color: Colors.green,
             label: 'Receita',
             icon: const Icon(Icons.arrow_upward),
           ),
           ActionButton(
-            onPressed: () => _showAction(context, 1),
+            onPressed: () => _displayTextInputDialog(context, TipoTransacaoEnum.Despesa),
             color: Colors.deepOrange,
             label: 'Despesa',
             icon: const Icon(Icons.arrow_downward),
