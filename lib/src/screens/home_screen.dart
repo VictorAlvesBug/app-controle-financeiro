@@ -1,7 +1,7 @@
 import 'dart:html';
 import 'dart:math';
 
-import 'package:controle_financeiro/components/resumo_box.dart';
+import '../components/resumo_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';

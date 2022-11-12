@@ -25,7 +25,7 @@ class LabeledDivider extends StatelessWidget{
                   height: 20,
                 )),
           ),
-          Text(text),
+          Text(text,style: TextStyle(color: Colors.white70)),
           Expanded(
             child: new Container(
                 margin: const EdgeInsets.only(left: 20.0, right: 10.0),

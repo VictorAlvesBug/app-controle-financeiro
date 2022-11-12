@@ -1,9 +1,10 @@
-import 'package:controle_financeiro/components/app_logo.dart';
-import 'package:controle_financeiro/components/labeled_divider.dart';
-import 'package:controle_financeiro/screens/home_screen.dart';
-import 'package:controle_financeiro/screens/register_screen.dart';
-import 'package:controle_financeiro/services/login_service.dart';
-import 'package:controle_financeiro/utils/utils.dart';
+import '../components/app_logo.dart';
+import '../components/labeled_divider.dart';
+import '../components/my_text_field.dart';
+import '../screens/home_screen.dart';
+import '../screens/register_screen.dart';
+import '../services/login_service.dart';
+import '../utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +19,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   var userEmail = '';
   var userPassword = '';
+
+  bool exibirSenha = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -39,21 +42,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const AppLogo(size: 60),
                     const SizedBox(height: 20),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('E-mail'),
-                      ),
+                    MyTextField(
+                      labelText: 'E-mail',
                       onChanged: (value) => userEmail = value.toLowerCase(),
+                      iconData: Icons.alternate_email_outlined,
                     ),
                     const SizedBox(height: 10),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        label: Text('Senha'),
-                      ),
+                    MyTextField(
+                      obscureText: !exibirSenha,
+                      labelText: 'Senha',
                       onChanged: (value) => userPassword = value,
+                      iconData: Icons.lock_outline,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: Text('Exibir senha', style: TextStyle(color: Colors.white70)),
+                      controlAffinity: ListTileControlAffinity.leading, // ListTileControlAffinity.trailing
+                      value: exibirSenha,
+                      onChanged: (value) {
+                        exibirSenha = value!;
+                        setState(() { });
+                      },
+                    ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _logar,
                       child: const Text('Entrar'),

@@ -1,4 +1,4 @@
-import 'package:controle_financeiro/dto/transacao_dto.dart';
+import './transacao_dto.dart';
 
 class TransacoesDiaDTO {
   TransacoesDiaDTO({

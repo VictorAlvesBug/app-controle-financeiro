@@ -1,9 +1,10 @@
-import 'package:controle_financeiro/components/app_logo.dart';
-import 'package:controle_financeiro/components/labeled_divider.dart';
-import 'package:controle_financeiro/screens/home_screen.dart';
-import 'package:controle_financeiro/services/login_service.dart';
-import 'package:controle_financeiro/services/register_service.dart';
-import 'package:controle_financeiro/utils/utils.dart';
+import '../components/app_logo.dart';
+import '../components/labeled_divider.dart';
+import '../components/my_text_field.dart';
+import '../screens/home_screen.dart';
+import '../services/login_service.dart';
+import '../services/register_service.dart';
+import '../utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart';
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var userEmail = '';
   var userPassword = '';
   var userPasswordConfirmation = '';
+  bool exibirSenha = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -42,7 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     const AppLogo(size: 60),
                     const SizedBox(height: 20),
-                    TextFormField(
+                    MyTextField(
                       validator: (value) {
                         String email = value ?? "";
                         RegExp regexEmail = RegExp(
@@ -54,13 +56,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         return null;
                       },
-                      decoration: const InputDecoration(
-                        label: Text('Informe seu e-mail'),
-                      ),
+                      labelText: 'Informe seu e-mail',
                       onChanged: (value) => userEmail = value.toLowerCase(),
+                      iconData: Icons.alternate_email_outlined,
                     ),
                     const SizedBox(height: 10),
-                    TextFormField(
+                    MyTextField(
                       validator: (value) {
                         String senha = value ?? "";
 
@@ -76,24 +77,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return "A senha deve conter ao menos um caracter numérico";
                         }
 
-                        if (regexContemLetraMinuscula.allMatches(senha).isEmpty) {
+                        if (regexContemLetraMinuscula
+                            .allMatches(senha)
+                            .isEmpty) {
                           return "A senha deve conter ao menos uma letra minúscula";
                         }
 
-                        if (regexContemLetraMaiuscula.allMatches(senha).isEmpty) {
+                        if (regexContemLetraMaiuscula
+                            .allMatches(senha)
+                            .isEmpty) {
                           return "A senha deve conter ao menos uma letra maiúscula";
                         }
 
                         return null;
                       },
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        label: Text('Crie uma senha'),
-                      ),
+                      obscureText: !exibirSenha,
+                      labelText: 'Crie uma senha',
                       onChanged: (newText) => userPassword = newText,
+                      iconData: Icons.lock_outline,
                     ),
                     const SizedBox(height: 10),
-                    TextFormField(
+                    MyTextField(
                       validator: (value) {
                         String confirmacaoSenha = value ?? "";
 
@@ -103,13 +107,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         return null;
                       },
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        label: Text('Confirme a senha'),
-                      ),
-                      onChanged: (newText) => userPasswordConfirmation = newText,
+                      obscureText: !exibirSenha,
+                      labelText: 'Confirme a senha',
+                      onChanged: (newText) =>
+                          userPasswordConfirmation = newText,
+                      iconData: Icons.lock_outline,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: Text('Exibir senha', style: TextStyle(color: Colors.white70)),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      // ListTileControlAffinity.trailing
+                      value: exibirSenha,
+                      onChanged: (value) {
+                        exibirSenha = value!;
+                        setState(() { });
+                      },
+                    ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _registrar,
                       child: const Text('Cadastrar'),
@@ -139,20 +154,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     bool valido = _formKey.currentState?.validate() ?? false;
 
     if (valido) {
-      await RegisterService().register(
-        userEmail,
-        userPassword,
-      );
+      dynamic registerResponse =
+          await RegisterService().register(userEmail, userPassword);
 
-      dynamic loginResponse = await LoginService().login(userEmail, userPassword);
+      if(!registerResponse['sucesso']){
+        Utils.message(context, registerResponse['mensagem']);
+        return;
+      }
 
-      if(loginResponse['sucesso']){
+      dynamic loginResponse =
+          await LoginService().login(userEmail, userPassword);
+
+      if (!loginResponse['sucesso']) {
+        Utils.message(context, loginResponse['mensagem']);
+        return;
+      }
+
         Utils.message(context, loginResponse['mensagem']);
         Navigator.pushReplacementNamed(context, HomeScreen.id);
-      }
-      else{
-        Utils.message(context, loginResponse['mensagem']);
-      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:controle_financeiro/components/app_logo.dart';
+import '../components/app_logo.dart';
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart';

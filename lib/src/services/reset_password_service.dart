@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:controle_financeiro/utils/routes.dart';
+import '../utils/routes.dart';
 import 'package:http/http.dart' as http;
 
-class LoginService {
-  dynamic login(String email, String password) async {
+class ResetPasswordService {
+  dynamic sendResetPasswordCode(String email, String password) async {
     http.Response response = await http.post(
-      Uri.parse(Routes.urlLogin),
+      Uri.parse(Routes.urlRegister),
       body: json.encode(
         {
           "email": email,
@@ -28,21 +28,18 @@ class LoginService {
     } else {
       return {
         'sucesso': true,
-        'mensagem': 'Login realizado com sucesso',
+        'mensagem': 'Cadastro realizado com sucesso',
         'idToken': bodyJson['idToken']
       };
       print(bodyJson['idToken']);
     }
   }
 
-  String retornarMensagem(String respostaLogin){
-    switch(respostaLogin)
+  String retornarMensagem(String respostaCadastro){
+    switch(respostaCadastro)
     {
-      case 'INVALID_EMAIL': return 'Informe um e-mail válido';
-      case 'EMAIL_NOT_FOUND': return 'E-mail ou senha inválidos';
-      case 'INVALID_PASSWORD': return 'E-mail ou senha inválidos';
-      case 'MISSING_PASSWORD': return 'Informe a senha';
-      default: return 'Erro ao realizar login';
+      case 'EMAIL_EXISTS': return 'E-mail já cadastrado';
+      default: return 'Erro ao realizar cadastro';
     }
   }
 }
