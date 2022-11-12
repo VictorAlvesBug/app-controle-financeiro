@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(context, LoginScreen.id);
     });
 
@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.deepPurple,
       body: SafeArea(
         child: Center(
-          child: AppLogo(size: 100)
+          child: AppLogo(size: 80, exibirSlogan: true)
         ),
       ),
     );

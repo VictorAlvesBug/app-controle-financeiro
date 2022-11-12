@@ -43,7 +43,7 @@ dependencies:
 
   intl:
   
-  http: ^0.12.2
+  # http: ^0.12.2
 
 dev_dependencies:
   flutter_test:

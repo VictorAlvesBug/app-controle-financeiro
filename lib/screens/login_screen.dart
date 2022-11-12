@@ -1,4 +1,5 @@
 import 'package:controle_financeiro/components/app_logo.dart';
+import 'package:controle_financeiro/components/labeled_divider.dart';
 import 'package:controle_financeiro/screens/home_screen.dart';
 import 'package:controle_financeiro/screens/register_screen.dart';
 import 'package:controle_financeiro/services/login_service.dart';
@@ -15,78 +16,79 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var userEmail = 'email@fake.com';
-  var userPassword = '123';
+  var userEmail = '';
+  var userPassword = '';
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-                const AppLogo(size: 60),
-                const SizedBox(height: 10),
-                TextField(
-                  decoration: const InputDecoration(
-                    label: Text('E-mail'),
-                  ),
-                  onChanged: (newText) => userEmail = newText,
+            child: Container(
+              constraints: BoxConstraints(minWidth: 250, maxWidth: 500),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const AppLogo(size: 60),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        label: Text('E-mail'),
+                      ),
+                      onChanged: (value) => userEmail = value.toLowerCase(),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        label: Text('Senha'),
+                      ),
+                      onChanged: (value) => userPassword = value,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _logar,
+                      child: const Text('Entrar'),
+                    ),
+                    LabeledDivider(text: 'ou', verticalPadding: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, RegisterScreen.id);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          side: const BorderSide(color: Colors.blue),
+                          foregroundColor: Colors.blue),
+                      child: const Text('Criar conta'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                TextField(
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    label: Text('Senha'),
-                  ),
-                  onChanged: (newText) => userPassword = newText,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    LoginService().login(userEmail, userPassword);
-
-                    /*const targetEmail = 'email@fake.com';
-                    const targetPassword = '123';
-                    if (targetEmail == userEmail &&
-                        targetPassword == userPassword) {
-                      Utils.message(
-                          context, 'Login fake realizado com sucesso');
-                      Navigator.pushReplacementNamed(context, HomeScreen.id);
-                    } else {
-                      Utils.message(context, 'Login não implementado...');
-                      Utils.message(context,
-                          'Tente logar com e-mail: $targetEmail  e senha: $targetPassword');
-                    }*/
-                  },
-                  child: const Text('Entrar'),
-                ),
-                const SizedBox(height: 5),
-                const Center(
-                    child:
-                        Text('-------------------- ou --------------------')),
-                const SizedBox(height: 5),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, RegisterScreen.id);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      side: const BorderSide(color: Colors.blue),
-                      foregroundColor: Colors.blue),
-                  child: const Text('Cadastre-se'),
-                ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _logar() async {
+    dynamic loginResponse = await LoginService().login(userEmail, userPassword);
+
+    if(loginResponse['sucesso']){
+      Utils.message(context, loginResponse['mensagem']);
+      Navigator.pushReplacementNamed(context, HomeScreen.id);
+    }
+    else{
+      Utils.message(context, loginResponse['mensagem']);
+    }
+
   }
 }
