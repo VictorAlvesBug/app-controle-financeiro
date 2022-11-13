@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:controle_financeiro/utils/routes.dart';
+import 'package:controle_financeiro/src/utils/routes.dart';
 import 'package:http/http.dart' as http;
 
 class LoginService {

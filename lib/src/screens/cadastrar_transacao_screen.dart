@@ -1,7 +1,7 @@
-import 'package:controle_financeiro/components/app_logo.dart';
-import 'package:controle_financeiro/screens/home_screen.dart';
-import 'package:controle_financeiro/screens/register_screen.dart';
-import 'package:controle_financeiro/utils/utils.dart';
+import 'package:controle_financeiro/src/components/app_logo.dart';
+import 'package:controle_financeiro/src/screens/home_screen.dart';
+import 'package:controle_financeiro/src/screens/register_screen.dart';
+import 'package:controle_financeiro/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class CadastrarTransacaoScreen extends StatefulWidget {
