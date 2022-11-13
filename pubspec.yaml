@@ -44,7 +44,7 @@ dependencies:
   intl:
   shared_preferences: ^2.0.15
   
-  # http: ^0.12.2
+  http:
 
 dev_dependencies:
   flutter_test:

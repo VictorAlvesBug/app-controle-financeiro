@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:controle_financeiro/src/utils/routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
   dynamic login(String email, String password) async {
@@ -26,6 +27,10 @@ class LoginService {
       };
       //print(bodyJson['error']['message']);
     } else {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+      sharedPreferences.setString('userId', bodyJson['localId']);
+
       return {
         'sucesso': true,
         'mensagem': 'Login realizado com sucesso',

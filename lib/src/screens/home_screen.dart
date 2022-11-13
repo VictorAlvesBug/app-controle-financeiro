@@ -2,6 +2,7 @@ import 'dart:html';
 import 'dart:math';
 
 import 'package:controle_financeiro/src/components/resumo_box.dart';
+import 'package:controle_financeiro/src/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -85,7 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    for(var i=0; i<5; i++)
+    ApiService().retornarTransacoes().then((retorno) {
+      listaTransacoes = retorno;
+      print(listaTransacoes);
+      //setState(() { });
+    });
+
+    /*for(var i=0; i<2; i++)
       {
         var randomGenerator = Random();
 
@@ -101,9 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
         final descricao = '${tipo.name} aleatória #$i';
 
-        listaTransacoes.add(TransacaoDTO(tipo: tipo, valor: valor, data: data, descricao: descricao));
+        listaTransacoes.add(TransacaoDTO({tipo: tipo, valor: valor, data: data, descricao: descricao}));
 
-      }
+      }*/
 
     final totalDespesasMes = listaTransacoes.fold(0.0, (acc, transacao) {
       if(transacao.tipo == TipoTransacaoEnum.Despesa)
