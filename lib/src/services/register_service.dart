@@ -4,7 +4,7 @@ import '../utils/routes.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterService {
-  dynamic register(String email, String password) async {
+  dynamic register(String nomeUsuario, String email, String password) async {
     http.Response response = await http.post(
       Uri.parse(Routes.urlRegister),
       body: json.encode(
@@ -17,22 +17,39 @@ class RegisterService {
     );
 
     dynamic bodyJson = json.decode(response.body);
-    print(response.body);
+
     if (response.statusCode == 400) {
       return {
         'sucesso': false,
         'mensagem': retornarMensagem(bodyJson['error']['message']),
         'idToken': null
       };
-      //print(bodyJson['error']['message']);
     } else {
+      var idToken = bodyJson['idToken'];
+
+      await _gravarNomeUsuario(idToken, nomeUsuario);
+
       return {
         'sucesso': true,
         'mensagem': 'Cadastro realizado com sucesso',
-        'idToken': bodyJson['idToken']
+        'idToken': idToken
       };
-      print(bodyJson['idToken']);
     }
+  }
+
+  Future<void> _gravarNomeUsuario(String idToken, String nomeUsuario) async {
+    http.Response response = await http.post(
+      Uri.parse(Routes.urlGravarNomeUsuario),
+      body: json.encode(
+        {
+          "idToken": idToken,
+          "displayName": nomeUsuario,
+          "photoUrl": "",
+          "deleteAttribute": ["PHOTO_URL"],
+          "returnSecureToken": true,
+        },
+      ),
+    );
   }
 
   String retornarMensagem(String respostaCadastro){

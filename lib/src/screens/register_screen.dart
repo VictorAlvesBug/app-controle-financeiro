@@ -19,6 +19,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  var userName = '';
   var userEmail = '';
   var userPassword = '';
   var userPasswordConfirmation = '';
@@ -30,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: const Color(0xFF444444),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -46,8 +47,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const AppLogo(size: 60),
                     const SizedBox(height: 20),
                     MyTextField(
+                      validator: _validadorNome,
+                      labelText: 'Nome completo',
+                      onChanged: (value) => userName = value,
+                      iconData: Icons.people_rounded,
+                    ),
+                    const SizedBox(height: 10),
+                    MyTextField(
                       validator: _validadorEmail,
-                      labelText: 'Informe seu e-mail',
+                      labelText: 'E-mail',
                       onChanged: (value) => userEmail = value.toLowerCase(),
                       iconData: Icons.alternate_email_outlined,
                     ),
@@ -55,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MyTextField(
                       validator: _validadorSenha,
                       obscureText: !exibirSenha,
-                      labelText: 'Crie uma senha',
+                      labelText: 'Senha',
                       onChanged: (newText) => userPassword = newText,
                       iconData: Icons.lock_outline,
                     ),
@@ -63,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MyTextField(
                       validator: _validadorConfirmacaoSenha,
                       obscureText: !exibirSenha,
-                      labelText: 'Confirme a senha',
+                      labelText: 'Confirmação da senha',
                       onChanged: (newText) =>
                           userPasswordConfirmation = newText,
                       iconData: Icons.lock_outline,
@@ -91,9 +99,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Navigator.pushReplacementNamed(context, LoginScreen.id);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          side: const BorderSide(color: Colors.blue),
-                          foregroundColor: Colors.blue),
+                          backgroundColor: const Color(0xFF444444),
+                          side: BorderSide(color: Theme.of(context).primaryColorLight),
+                          foregroundColor: Theme.of(context).primaryColorLight),
                       child: const Text('Já tenho cadastro'),
                     ),
                   ],
@@ -104,6 +112,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  String? _validadorNome(String? value) {
+    String nome = value ?? "";
+    RegExp regexNome = RegExp(r"^(\S)+(\s(\S)+)+$");
+
+    if (regexNome.allMatches(nome).isEmpty) {
+      return "Informe seu nome completo";
+    }
+
+    return null;
   }
 
   String? _validadorEmail(String? value) {
@@ -161,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     dynamic registerResponse =
-        await RegisterService().register(userEmail, userPassword);
+        await RegisterService().register(userName, userEmail, userPassword);
 
     if (!registerResponse['sucesso']) {
       Utils.message(context, registerResponse['mensagem']);

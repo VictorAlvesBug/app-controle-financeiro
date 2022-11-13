@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: const Color(0xFF444444),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -77,9 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacementNamed(context, RegisterScreen.id);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          side: const BorderSide(color: Colors.blue),
-                          foregroundColor: Colors.blue),
+                          backgroundColor: const Color(0xFF444444),
+                          side: BorderSide(color: Theme.of(context).primaryColorLight),
+                          foregroundColor: Theme.of(context).primaryColorLight),
                       child: const Text('Criar conta'),
                     ),
                   ],

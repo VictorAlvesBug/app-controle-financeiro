@@ -4,4 +4,5 @@ class Routes {
 
   static const urlRegister = '$_firebaseUrl/accounts:signUp?key=$_apiKey';
   static const urlLogin = '$_firebaseUrl/accounts:signInWithPassword?key=$_apiKey';
+  static const urlGravarNomeUsuario = '$_firebaseUrl/accounts:update?key=$_apiKey';
 }

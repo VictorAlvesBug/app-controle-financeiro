@@ -8,18 +8,20 @@ import 'package:flutter/material.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Controle Financeiro',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Colors.indigo,
+          primaryColorLight: Colors.orange,
+          primaryColorDark: Colors.black12,
+          primarySwatch: Colors.indigo,
         ),
         initialRoute: SplashScreen.id,
         routes: {
           SplashScreen.id: (context) => const SplashScreen(),
-          HomeScreen.id: (context) => const HomeScreen(title: 'Test'),
+          HomeScreen.id: (context) => const HomeScreen(),
           LoginScreen.id: (context) => const LoginScreen(),
           RegisterScreen.id: (context) => const RegisterScreen(),
           CadastrarTransacaoScreen.id: (context) => const CadastrarTransacaoScreen(),

@@ -5,20 +5,20 @@ import '../enums/tipo_transacao_enum.dart';
 
 class TransacaoDTO {
   TransacaoDTO({
-    required this.codigo,
+    this.codigo,
     required this.tipo,
     required this.valor,
     required this.data,
     required this.descricao,
-    required this.dataHoraCadastro,
+    this.dataHoraCadastro,
 });
 
-  final String codigo;
+  final String? codigo;
   final TipoTransacaoEnum tipo;
   final double valor;
   final DateTime data;
   final String descricao;
-  final DateTime dataHoraCadastro;
+  final DateTime? dataHoraCadastro;
 
   String getDescricaoResumida({int maxLength = 0}){
     var larguraDescricao = descricao.length;

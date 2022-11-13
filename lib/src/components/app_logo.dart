@@ -25,7 +25,7 @@ class AppLogo extends StatelessWidget {
         'Seu maior aliado na conquista da sua liberdade financeira',
         style: GoogleFonts.fuzzyBubbles(
           fontSize: textFontSize * 0.7,
-          color: Colors.amber,
+          color: Theme.of(context).primaryColorLight,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -41,7 +41,7 @@ class AppLogo extends StatelessWidget {
               width: logoWidth,
               child: Image.asset(
                 'assets/images/logo.png',
-                color: Colors.amber,
+                color: Theme.of(context).primaryColorLight,
               ),
             ),
             SizedBox(
@@ -51,7 +51,7 @@ class AppLogo extends StatelessWidget {
               'Controle Financeiro',
               style: GoogleFonts.fuzzyBubbles(
                 fontSize: textFontSize,
-                color: Colors.amber,
+                color: Theme.of(context).primaryColorLight,
                 fontWeight: FontWeight.bold,
               ),
             ),

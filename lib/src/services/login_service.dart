@@ -18,25 +18,22 @@ class LoginService {
     );
 
     dynamic bodyJson = json.decode(response.body);
-    print(response.body);
     if (response.statusCode == 400) {
       return {
         'sucesso': false,
         'mensagem': retornarMensagem(bodyJson['error']['message']),
         'idToken': null
       };
-      //print(bodyJson['error']['message']);
     } else {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
       sharedPreferences.setString('userId', bodyJson['localId']);
+      sharedPreferences.setString('displayName', bodyJson['displayName']);
 
       return {
         'sucesso': true,
         'mensagem': 'Login realizado com sucesso',
         'idToken': bodyJson['idToken']
       };
-      print(bodyJson['idToken']);
     }
   }
 
@@ -49,5 +46,25 @@ class LoginService {
       case 'MISSING_PASSWORD': return 'Informe a senha';
       default: return 'Erro ao realizar login';
     }
+  }
+
+  Future<String?> retornarUserId() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString('userId');
+  }
+
+  Future<String?> retornarDisplayName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString('displayName');
+  }
+
+  Future<String> retornarFirstName() async {
+    String displayName = await retornarDisplayName() ?? "Usuário Teste";
+    return displayName.split(' ').elementAt(0);
+  }
+
+  Future<void> logout() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove('userId');
   }
 }
