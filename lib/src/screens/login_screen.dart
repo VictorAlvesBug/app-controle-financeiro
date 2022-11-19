@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     MyTextField(
                       validator: _validadorEmail,
                       labelText: 'E-mail',
-                      onChanged: (value) => userEmail = value.toLowerCase(),
+                      onChanged: (value) => userEmail = value.toLowerCase().trim(),
                       iconData: Icons.alternate_email_outlined,
                     ),
                     const SizedBox(height: 10),
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? _validadorEmail(String? value){
-    String email = value ?? "";
+    String email = (value ?? "").toLowerCase().trim();
     RegExp regexEmail = RegExp(
         r"^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.\w+$");
 

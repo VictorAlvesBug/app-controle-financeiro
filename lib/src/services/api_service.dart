@@ -4,17 +4,14 @@ import 'dart:io';
 import 'package:controle_financeiro/src/dto/transacao_dto.dart';
 import 'package:controle_financeiro/src/services/login_service.dart';
 import 'package:controle_financeiro/src/utils/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../enums/tipo_transacao_enum.dart';
-import '../utils/routes.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   static const _apiUrl = 'http://localhost:3000/api';
 
-  Future<List<TransacaoDTO>> retornarTransacoes() async {
-    try {
+  static Future<List<TransacaoDTO>> listar() async {
       final userId = await LoginService().retornarUserId();
       final uri = Uri.parse('$_apiUrl/transacoes?userId=$userId');
       final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
@@ -43,13 +40,40 @@ class ApiService {
 
       print(responseJson['mensagem']);
       return [];
-    } catch (error) {
-      print(error);
-      return [];
-    }
   }
 
-  Future<String> cadastrarTransacao(TransacaoDTO transacao) async {
+  static Future<TransacaoDTO?> retornar(String codigo) async {
+    final userId = await LoginService().retornarUserId();
+    final uri = Uri.parse('$_apiUrl/transacoes/$codigo?userId=$userId');
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+
+    http.Response response = await http.get(uri, headers: headers);
+
+    final responseJson = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      List<TransacaoDTO> listaRetorno = responseJson['dados']
+          .map<TransacaoDTO>((transacaoJson) => TransacaoDTO(
+        codigo: transacaoJson['codigo'],
+        tipo: transacaoJson['tipo'] == 'R'
+            ? TipoTransacaoEnum.Receita
+            : TipoTransacaoEnum.Despesa,
+        valor: transacaoJson['valor'],
+        data: DateTime.parse(transacaoJson['dataTransacao']),
+        descricao: transacaoJson['nome'],
+        dataHoraCadastro:
+        DateTime.parse(transacaoJson['dataHoraCadastro']),
+      ))
+          .toList();
+
+      return listaRetorno.elementAt(0);
+    }
+
+    print(responseJson['mensagem']);
+    return null;
+  }
+
+  static Future<String> cadastrar(TransacaoDTO transacao) async {
     try {
       final userId = await LoginService().retornarUserId();
       final uri = Uri.parse('$_apiUrl/transacoes?userId=$userId');
@@ -62,7 +86,7 @@ class ApiService {
       });
 
       http.Response response =
-          await http.post(uri, headers: headers, body: body);
+      await http.post(uri, headers: headers, body: body);
 
       final responseJson = jsonDecode(response.body);
 
@@ -70,6 +94,58 @@ class ApiService {
         return responseJson['mensagem'];
       }
 
+      return responseJson['mensagem'];
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  static Future<String> editar(TransacaoDTO transacao) async {
+    try {
+      final userId = await LoginService().retornarUserId();
+      final uri = Uri.parse('$_apiUrl/transacoes/${transacao.codigo}?userId=$userId');
+      final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+      final body = json.encode({
+        "nome": transacao.descricao,
+        "valor": transacao.valor,
+        "tipo": transacao.ehReceita() ? 'R' : 'D',
+        "dataTransacao": Utils.formatarData_yyyyMMdd(transacao.data),
+      });
+
+      http.Response response =
+          await http.patch(uri, headers: headers, body: body);
+
+      final responseJson = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && responseJson['sucesso']) {
+        return responseJson['mensagem'];
+      }
+
+      return responseJson['mensagem'];
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  static Future<String> deletar(String? codigo) async {
+    try {
+
+      if(codigo == null)
+        {
+          return "Código da transação está inválido";
+        }
+
+      final userId = await LoginService().retornarUserId();
+      final uri = Uri.parse('$_apiUrl/transacoes/$codigo?userId=$userId');
+      final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+
+      http.Response response = await http.delete(uri, headers: headers);
+
+      if (response.statusCode == 204) {
+        return "Transação removida com sucesso";
+      }
+
+      final responseJson = jsonDecode(response.body);
       return responseJson['mensagem'];
     } catch (error) {
       return error.toString();

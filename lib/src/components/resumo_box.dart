@@ -22,8 +22,8 @@ class _ResumoBoxState extends State<ResumoBox> {
   @override
   Widget build(BuildContext context) {
     final dataAtual = DateTime.now();
-    final strMesAtual = DateFormat.MMMM().format(dataAtual);
-    final anoAtual = DateFormat.y().format(dataAtual);
+    final strMesAtual = Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAtual));
+    final anoAtual = DateFormat('yyyy', "pt_BR").format(dataAtual);
     final mesAnoAtualFormatado = '$strMesAtual/$anoAtual';
 
     return Container(

@@ -7,6 +7,58 @@ class Utils {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  static exibirModalConfirmacao({
+    required BuildContext context,
+    required String tituloModal,
+    required String textoModal,
+    void Function()? callbackSim,
+    String? textoBotaoSim,
+    void Function()? callbackNao,
+    String? textoBotaoNao,
+  }) {
+    Widget botaoSim = InkWell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Text(textoBotaoSim ?? "Sim"),
+      ),
+      onTap: () {
+        if(callbackSim != null){
+          callbackSim();
+        }
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget botaoNao = InkWell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Text(textoBotaoNao ?? "Não"),
+      ),
+      onTap: () {
+        if(callbackNao != null){
+          callbackNao();
+        }
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(tituloModal),
+      content: Text(textoModal),
+      actions: [
+        botaoSim,
+        botaoNao,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   static String formatarValor(double valor) {
     var formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
     return formatoReal.format(valor);
@@ -60,25 +112,35 @@ class Utils {
   }
 
   static String formatarData_ddMMyyyy(DateTime data) {
-    String dia = DateFormat.d().format(data).padLeft(2, '0');
-    String mes = DateFormat.M().format(data).padLeft(2, '0');
-    String ano = DateFormat.y().format(data).padLeft(4, '0');
-
-    return '$dia/$mes/$ano';
+    return DateFormat("dd'/'MM'/'yyyy", "pt_BR").format(data);
   }
 
   static String formatarData_yyyyMMdd(DateTime data) {
-    String dia = DateFormat.d().format(data).padLeft(2, '0');
-    String mes = DateFormat.M().format(data).padLeft(2, '0');
-    String ano = DateFormat.y().format(data).padLeft(4, '0');
-
-    return '$ano-$mes-$dia';
+    return DateFormat("yyyy'-'MM'-'dd", "pt_BR").format(data);
   }
 
   static String formatarData_EEEEdd(DateTime data) {
-    String diaNumerico = DateFormat.d().format(data).padLeft(2, '0');
-    String diaSemana = DateFormat.EEEE().format(data);
+    String diaSemana = DateFormat('EEEE', "pt_BR").format(data);
+    String diaNumerico = DateFormat('dd', "pt_BR").format(data);
 
-    return '$diaSemana, $diaNumerico';
+    String diaSemanaSemFeira = diaSemana.split('-').elementAt(0);
+
+    String diaSemanaCapitalizado = capitalize(diaSemanaSemFeira);
+
+    return '$diaSemanaCapitalizado, $diaNumerico';
+  }
+
+  static capitalize(String texto){
+    if(texto.length == 0)
+      return "";
+
+    String primeiraLetra = texto[0].toUpperCase();
+
+    if(texto.length == 1)
+      return primeiraLetra;
+
+    String demaisLetras = texto.substring(1).toLowerCase();
+
+    return '${primeiraLetra}${demaisLetras}';
   }
 }

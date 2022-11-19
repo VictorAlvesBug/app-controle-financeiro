@@ -22,7 +22,7 @@ class AppLogo extends StatelessWidget {
 
     if(exibirSlogan == true) {
       textSlogan = Text(
-        'Seu maior aliado na conquista da sua liberdade financeira',
+        'Seu agente de finanças',
         style: GoogleFonts.fuzzyBubbles(
           fontSize: textFontSize * 0.7,
           color: Theme.of(context).primaryColorLight,

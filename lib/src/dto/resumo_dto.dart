@@ -1,5 +1,4 @@
 import 'package:controle_financeiro/src/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 class ResumoDTO{
@@ -9,8 +8,8 @@ class ResumoDTO{
     required this.totalReceitasMes
 });
 
-  int mes = int.parse(DateFormat.M().format(DateTime.now()));
-  int ano = int.parse(DateFormat.y().format(DateTime.now()));
+  int mes = int.parse(DateFormat('M', "pt_BR").format(DateTime.now()));
+  int ano = int.parse(DateFormat('yyyy', "pt_BR").format(DateTime.now()));
 
   final double saldoEmConta;
   final double totalDespesasMes;
@@ -18,19 +17,19 @@ class ResumoDTO{
 
   String getMesAnoFormatado(){
     var dataAux = new DateTime(ano, mes, 1);
-    String strMes = DateFormat.MMMM().format(dataAux).padLeft(2, '0');
+    String strMes = Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAux));
     return '$strMes/$ano';
   }
 
   void acessarMesAnterior(){
     var dataAux = new DateTime(ano, mes-1, 1);
-    ano = int.parse(DateFormat.y().format(dataAux));
-    mes = int.parse(DateFormat.M().format(dataAux));
+    ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
+    mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
   }
 
   void acessarMesPosterior(){
     var dataAux = new DateTime(ano, mes+1, 1);
-    ano = int.parse(DateFormat.y().format(dataAux));
-    mes = int.parse(DateFormat.M().format(dataAux));
+    ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
+    mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
   }
 }

@@ -47,10 +47,10 @@ class TransacaoDTO {
   }
 
   int getMes (){
-    return int.parse(DateFormat.M().format(data));
+    return int.parse(DateFormat('M', "pt_BR").format(data));
   }
 
   int getAno (){
-    return int.parse(DateFormat.y().format(data));
+    return int.parse(DateFormat('yyyy', "pt_BR").format(data));
   }
 }

@@ -17,6 +17,10 @@ class ExpandableFab extends StatefulWidget {
 
   @override
   State<ExpandableFab> createState() => _ExpandableFabState();
+
+  static void toggle(){
+    _ExpandableFabState().toggle();
+  }
 }
 
 class _ExpandableFabState extends State<ExpandableFab>
@@ -47,7 +51,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     super.dispose();
   }
 
-  void _toggle() {
+  void toggle() {
     setState(() {
       _open = !_open;
       if (_open) {
@@ -83,7 +87,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           clipBehavior: Clip.antiAlias,
           elevation: 4.0,
           child: InkWell(
-            onTap: _toggle,
+            onTap: toggle,
             child: Container(
               color: Colors.transparent,
               child: Padding(
@@ -107,6 +111,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     for (var i = 0, angleInDegrees = 45.0;
         i < count;
         i++, angleInDegrees += step) {
+
       children.add(
         _ExpandingActionButton(
           directionInDegrees: angleInDegrees,
@@ -136,7 +141,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
-            onPressed: _toggle,
+            onPressed: toggle,
             backgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.add),
           ),
