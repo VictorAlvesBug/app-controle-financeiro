@@ -52,7 +52,7 @@ class TransacaoController {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Adicionar ${tipoTransacao.name}',
+                        Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
                             style:
                             TextStyle(color: Colors.white70, fontSize: 20)),
                         SizedBox(height: 20),
@@ -153,7 +153,7 @@ class TransacaoController {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Alterar ${transacao.tipo.name}',
+                        Text('Alterar ${transacao.tipo.name.toLowerCase()}',
                             style:
                             TextStyle(color: Colors.white70, fontSize: 20)),
                         SizedBox(height: 20),

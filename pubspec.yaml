@@ -49,6 +49,8 @@ dependencies:
   
   http:
 
+  flutter_speed_dial: ^4.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -7,9 +7,8 @@ import 'package:controle_financeiro/src/services/login_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../components/action_button.dart';
-import '../components/expandable_fab.dart';
 import '../dto/resumo_dto.dart';
 import '../dto/transacao_dto.dart';
 import '../dto/transacoes_dia_dto.dart';
@@ -170,11 +169,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .editar(context, transacao.codigo),
                               onLongPress: () => _modalExcluir(transacao),
                               title: Text(
-                                transacao.getDescricaoResumida(),
+                                transacao.descricao,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: Color(0xFFA3A3A3),
+                                  color: Colors.white70,
                                   fontSize: 18,
                                 ),
                               ),
@@ -182,9 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Utils.formatarValor(transacao.valor),
                                 style: TextStyle(
                                   color: transacao.getCorTipoTransacao(),
-                                  fontSize: 20,
+                                  fontSize: 16,
                                 ),
                               ),
+                              dense: true,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                             );
                           },
                           separatorBuilder: (_, index) => SizedBox(height: 10),
@@ -199,36 +200,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   shrinkWrap: true,
                 ),
               ),
-
-              /*ListView(
-              children: [],
-                scrollDirection: Axis.vertical,
-              ),*/
             ],
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ExpandableFab(
-        initialOpen: fabAberto,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Theme.of(context).primaryColor,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.4,
+        spacing: 10,
+        spaceBetweenChildren: 10,
         children: [
-          ActionButton(
-            onPressed: () {
+          SpeedDialChild(
+            child: Icon(Icons.arrow_upward, color: Colors.white70),
+            backgroundColor: Colors.green,
+            label: 'Adicionar receita',
+            labelBackgroundColor: Color(0xFF333333),
+            labelStyle: TextStyle(color: Colors.white70),
+            onTap: () {
               TransacaoController()
                   .cadastrar(context, TipoTransacaoEnum.Receita);
             },
-            color: Colors.green,
-            label: 'Receita',
-            icon: const Icon(Icons.arrow_upward),
           ),
-          ActionButton(
-            onPressed: () {
+          SpeedDialChild(
+            child: Icon(Icons.arrow_downward, color: Colors.white70),
+            backgroundColor: Colors.deepOrange,
+            label: 'Adicionar despesa',
+            labelBackgroundColor: Color(0xFF333333),
+            labelStyle: TextStyle(color: Colors.white70),
+            onTap: () {
               TransacaoController()
                   .cadastrar(context, TipoTransacaoEnum.Despesa);
             },
-            color: Colors.deepOrange,
-            label: 'Despesa',
-            icon: const Icon(Icons.arrow_downward),
           ),
         ],
       ),

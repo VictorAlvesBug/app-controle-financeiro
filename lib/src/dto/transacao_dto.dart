@@ -20,20 +20,6 @@ class TransacaoDTO {
   final String descricao;
   final DateTime? dataHoraCadastro;
 
-  String getDescricaoResumida({int maxLength = 0}){
-    var larguraDescricao = descricao.length;
-
-    if(maxLength == 0){
-      maxLength = larguraDescricao;
-    }
-
-    if(larguraDescricao > maxLength){
-      return '${descricao.substring(0, maxLength-3)}...';
-    }
-
-    return descricao;
-  }
-
   Color getCorTipoTransacao(){
     if(ehReceita()){
       return Colors.green;
