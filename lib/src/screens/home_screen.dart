@@ -147,87 +147,42 @@ class _HomeScreenState extends State<HomeScreen> {
                             final transacao =
                                 transacoesDia.listaTransacoes[indiceTransacao];
 
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF444444),
-                                borderRadius: BorderRadius.circular(5),
+                            return ListTile(
+                              tileColor: const Color(0xFF444444),
+                              leading: Container(
+                                width: 40,
+                                height: 40,
+                                child: Icon(Icons.monetization_on_outlined,
+                                    color: Colors.white70),
+                                decoration: BoxDecoration(
+                                  color: transacao.getCorTipoTransacao(),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () => TransacaoController().editar(context, transacao.codigo),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: 40,
-                                        height: 40,
-                                        child: Icon(
-                                            Icons.monetization_on_outlined,
-                                            color: Colors.white70),
-                                        decoration: BoxDecoration(
-                                          color: transacao.getCorTipoTransacao(),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        transacao.getDescricaoResumida(),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Color(0xFFA3A3A3),
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              Utils.formatarValor(
-                                                  transacao.valor),
-                                              style: TextStyle(
-                                                color: transacao
-                                                    .getCorTipoTransacao(),
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            InkWell(
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.white70,
-                                              ),
-                                              onTap: () {
-                                                Utils.exibirModalConfirmacao(
-                                                  context: context,
-                                                  tituloModal:
-                                                      "Excluir Transação",
-                                                  textoModal:
-                                                      "Deseja mesmo excluir a ${transacao.tipo.name.toLowerCase()} '${transacao.descricao}'?",
-                                                  callbackSim: () async {
-                                                    ApiService
-                                                        .deletar(
-                                                            transacao.codigo)
-                                                        .then((mensagem) {
-                                                      Utils.message(
-                                                          context, mensagem);
-                                                      setState(() {});
-                                                    });
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                              trailing: InkWell(
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.white70,
+                                ),
+                                onTap: () => _modalExcluir(transacao),
+                              ),
+                              onTap: () => TransacaoController()
+                                  .editar(context, transacao.codigo),
+                              onLongPress: () => _modalExcluir(transacao),
+                              title: Text(
+                                transacao.getDescricaoResumida(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Color(0xFFA3A3A3),
+                                  fontSize: 18,
+                                ),
+                              ),
+                              subtitle: Text(
+                                Utils.formatarValor(transacao.valor),
+                                style: TextStyle(
+                                  color: transacao.getCorTipoTransacao(),
+                                  fontSize: 20,
                                 ),
                               ),
                             );
@@ -253,8 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ExpandableFab(
-        distance: 112.0,
         initialOpen: fabAberto,
         children: [
           ActionButton(
@@ -277,6 +232,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _modalExcluir(TransacaoDTO transacao) {
+    Utils.exibirModalConfirmacao(
+      context: context,
+      tituloModal: "Excluir Transação",
+      textoModal:
+          "Deseja mesmo excluir a ${transacao.tipo.name.toLowerCase()} '${transacao.descricao}'?",
+      callbackSim: () async {
+        ApiService.deletar(transacao.codigo).then((mensagem) {
+          Utils.message(context, mensagem);
+          setState(() {});
+        });
+      },
     );
   }
 
