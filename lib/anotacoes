@@ -2,4 +2,3 @@
 - Implementar reflesh das transações ao cadastrar, editar ou excluir uma transação.
 - Corrigir projeto para voltar a funcionar nos emulatores de Android.
 - Implementar paginação dos meses.
-- Mondar Readme.md explicando como rodar o projeto.
