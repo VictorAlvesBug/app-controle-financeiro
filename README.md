@@ -35,3 +35,6 @@ Para utilizar o aplicativo sem a necessidade de criar uma conta, utilize o segui
 
 - E-mail: usuario@anonimo.com
 - Senha: UsuarioAnonimo123
+
+Obs: lembre-se que, para rodar o aplicativo, é necessário estar com a
+[API](https://github.com/VictorAlvesBug/app-controle-financeiro) rodando também.
