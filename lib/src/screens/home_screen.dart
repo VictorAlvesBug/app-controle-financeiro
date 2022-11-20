@@ -37,7 +37,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<TransacaoDTO> listaTransacoes = [];
   String nomeUsuario = '';
-  bool fabAberto = false;
+  final fabAberto = ValueNotifier(false);
 
   @override
   void initState() {
@@ -77,164 +77,175 @@ class _HomeScreenState extends State<HomeScreen> {
         TransacoesDiaDTO.getListaTransacoesMes(listaTransacoes,
             mes: resumoDto.mes, ano: resumoDto.ano);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Controle Financeiro'),
-      ),
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF444444),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Olá, $nomeUsuario',
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                        InkWell(
-                          child: Icon(Icons.logout, color: Colors.white70),
-                          onTap: () async {
-                            await LoginService().logout();
-                            Navigator.pushReplacementNamed(
-                                context, LoginScreen.id);
-                          },
-                        ),
-                      ],
+    return WillPopScope(
+      onWillPop: () async {
+        if(fabAberto.value){
+          fabAberto.value = false;
+          return false;
+        }
+
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Controle Financeiro'),
+        ),
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF444444),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Olá, $nomeUsuario',
+                            style: TextStyle(color: Colors.white70, fontSize: 16),
+                          ),
+                          InkWell(
+                            child: Icon(Icons.logout, color: Colors.white70),
+                            onTap: () async {
+                              await LoginService().logout();
+                              Navigator.pushReplacementNamed(
+                                  context, LoginScreen.id);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: ResumoBox(
-                    resumoDto: resumoDto,
-                    callbackAtualizacaoCascata: (resumoDtoCallback) {
-                      resumoDto = resumoDtoCallback;
-                      setState(() {});
-                    }),
-              ),
-              SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: ListView.separated(
-                  itemBuilder: (_, indiceTransacoesDia) {
-                    final transacoesDia =
-                        listaTransacoesDia[indiceTransacoesDia];
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(Utils.formatarData_EEEEdd(transacoesDia.data),
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 16)),
-                        SizedBox(height: 5),
-                        ListView.separated(
-                          itemBuilder: (_, indiceTransacao) {
-                            final transacao =
-                                transacoesDia.listaTransacoes[indiceTransacao];
-
-                            return ListTile(
-                              tileColor: const Color(0xFF444444),
-                              leading: Container(
-                                width: 40,
-                                height: 40,
-                                child: Icon(Icons.monetization_on_outlined,
-                                    color: Colors.white70),
-                                decoration: BoxDecoration(
-                                  color: transacao.getCorTipoTransacao(),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              trailing: InkWell(
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.white70,
-                                ),
-                                onTap: () => _modalExcluir(transacao),
-                              ),
-                              onTap: () => TransacaoController()
-                                  .editar(context, transacao.codigo),
-                              onLongPress: () => _modalExcluir(transacao),
-                              title: Text(
-                                transacao.descricao,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              subtitle: Text(
-                                Utils.formatarValor(transacao.valor),
-                                style: TextStyle(
-                                  color: transacao.getCorTipoTransacao(),
-                                  fontSize: 16,
-                                ),
-                              ),
-                              dense: true,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                            );
-                          },
-                          separatorBuilder: (_, index) => SizedBox(height: 10),
-                          itemCount: transacoesDia.listaTransacoes.length,
-                          shrinkWrap: true,
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (_, index) => SizedBox(height: 15),
-                  itemCount: listaTransacoesDia.length,
-                  shrinkWrap: true,
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ResumoBox(
+                      resumoDto: resumoDto,
+                      callbackAtualizacaoCascata: (resumoDtoCallback) {
+                        resumoDto = resumoDtoCallback;
+                        setState(() {});
+                      }),
                 ),
-              ),
-            ],
+                SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ListView.separated(
+                    itemBuilder: (_, indiceTransacoesDia) {
+                      final transacoesDia =
+                          listaTransacoesDia[indiceTransacoesDia];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(Utils.formatarData_EEEEdd(transacoesDia.data),
+                              style:
+                                  TextStyle(color: Colors.white70, fontSize: 16)),
+                          SizedBox(height: 5),
+                          ListView.separated(
+                            itemBuilder: (_, indiceTransacao) {
+                              final transacao =
+                                  transacoesDia.listaTransacoes[indiceTransacao];
+
+                              return ListTile(
+                                tileColor: const Color(0xFF444444),
+                                leading: Container(
+                                  width: 40,
+                                  height: 40,
+                                  child: Icon(Icons.monetization_on_outlined,
+                                      color: Colors.white70),
+                                  decoration: BoxDecoration(
+                                    color: transacao.getCorTipoTransacao(),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                trailing: InkWell(
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.white70,
+                                  ),
+                                  onTap: () => _modalExcluir(transacao),
+                                ),
+                                onTap: () => TransacaoController()
+                                    .editar(context, transacao.codigo),
+                                onLongPress: () => _modalExcluir(transacao),
+                                title: Text(
+                                  transacao.descricao,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  Utils.formatarValor(transacao.valor),
+                                  style: TextStyle(
+                                    color: transacao.getCorTipoTransacao(),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                dense: true,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                              );
+                            },
+                            separatorBuilder: (_, index) => SizedBox(height: 10),
+                            itemCount: transacoesDia.listaTransacoes.length,
+                            shrinkWrap: true,
+                          ),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (_, index) => SizedBox(height: 15),
+                    itemCount: listaTransacoesDia.length,
+                    shrinkWrap: true,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Theme.of(context).primaryColor,
-        overlayColor: Colors.black,
-        overlayOpacity: 0.4,
-        spacing: 10,
-        spaceBetweenChildren: 10,
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.arrow_upward, color: Colors.white70),
-            backgroundColor: Colors.green,
-            label: 'Adicionar receita',
-            labelBackgroundColor: Color(0xFF333333),
-            labelStyle: TextStyle(color: Colors.white70),
-            onTap: () {
-              TransacaoController()
-                  .cadastrar(context, TipoTransacaoEnum.Receita);
-            },
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.arrow_downward, color: Colors.white70),
-            backgroundColor: Colors.deepOrange,
-            label: 'Adicionar despesa',
-            labelBackgroundColor: Color(0xFF333333),
-            labelStyle: TextStyle(color: Colors.white70),
-            onTap: () {
-              TransacaoController()
-                  .cadastrar(context, TipoTransacaoEnum.Despesa);
-            },
-          ),
-        ],
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          backgroundColor: Theme.of(context).primaryColor,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.4,
+          spacing: 10,
+          spaceBetweenChildren: 10,
+          openCloseDial: fabAberto,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.arrow_upward, color: Colors.white70),
+              backgroundColor: Colors.green,
+              label: 'Adicionar receita',
+              labelBackgroundColor: Color(0xFF333333),
+              labelStyle: TextStyle(color: Colors.white70),
+              onTap: () {
+                TransacaoController()
+                    .cadastrar(context, TipoTransacaoEnum.Receita);
+              },
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.arrow_downward, color: Colors.white70),
+              backgroundColor: Colors.deepOrange,
+              label: 'Adicionar despesa',
+              labelBackgroundColor: Color(0xFF333333),
+              labelStyle: TextStyle(color: Colors.white70),
+              onTap: () {
+                TransacaoController()
+                    .cadastrar(context, TipoTransacaoEnum.Despesa);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

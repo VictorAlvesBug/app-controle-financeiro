@@ -39,9 +39,9 @@ class TransacaoController {
                 Container(
                   constraints: BoxConstraints(
                     minWidth: 250,
-                    maxWidth: 500,
+                    maxWidth: 350,
                     minHeight: 250,
-                    maxHeight: 500,
+                    maxHeight: 365,
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   decoration: BoxDecoration(
@@ -50,6 +50,7 @@ class TransacaoController {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
@@ -140,9 +141,9 @@ class TransacaoController {
                 Container(
                   constraints: BoxConstraints(
                     minWidth: 250,
-                    maxWidth: 500,
+                    maxWidth: 350,
                     minHeight: 250,
-                    maxHeight: 500,
+                    maxHeight: 365,
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   decoration: BoxDecoration(
@@ -151,6 +152,7 @@ class TransacaoController {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text('Alterar ${transacao.tipo.name.toLowerCase()}',

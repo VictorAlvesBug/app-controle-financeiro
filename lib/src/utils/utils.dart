@@ -12,14 +12,14 @@ class Utils {
     required String tituloModal,
     required String textoModal,
     void Function()? callbackSim,
-    String? textoBotaoSim,
+    String textoBotaoSim = "Sim",
     void Function()? callbackNao,
-    String? textoBotaoNao,
+    String textoBotaoNao = "Não",
   }) {
     Widget botaoSim = InkWell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoSim ?? "Sim"),
+        child: Text(textoBotaoSim, style: TextStyle(color: Colors.white70)),
       ),
       onTap: () {
         if(callbackSim != null){
@@ -32,7 +32,7 @@ class Utils {
     Widget botaoNao = InkWell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoNao ?? "Não"),
+        child: Text(textoBotaoNao, style: TextStyle(color: Colors.white70)),
       ),
       onTap: () {
         if(callbackNao != null){
@@ -43,8 +43,9 @@ class Utils {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text(tituloModal),
-      content: Text(textoModal),
+      backgroundColor: Color(0xFF444444),
+      title: Text(tituloModal, style: TextStyle(color: Colors.white70)),
+      content: Text(textoModal, style: TextStyle(color: Colors.white70)),
       actions: [
         botaoSim,
         botaoNao,
