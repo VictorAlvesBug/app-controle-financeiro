@@ -45,16 +45,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     MyTextField(
                       validator: _validadorEmail,
                       labelText: 'E-mail',
-                      onChanged: (value) => userEmail = value.toLowerCase().trim(),
+                      onChanged: (value) {
+                        userEmail = value.toLowerCase().trim();
+                        setState(() {});
+                      },
                       iconData: Icons.alternate_email_outlined,
+                      valido: _validadorEmail(userEmail) == null,
                     ),
                     const SizedBox(height: 10),
                     MyTextField(
                       validator: _validadorSenha,
                       labelText: 'Senha',
                       obscureText: !exibirSenha,
-                      onChanged: (value) => userPassword = value,
+                      onChanged: (value) {
+                        userPassword = value;
+                        setState(() {});
+                      },
                       iconData: Icons.lock_outline,
+                      valido: _validadorSenha(userPassword) == null,
                     ),
                     const SizedBox(height: 10),
                     CheckboxListTile(

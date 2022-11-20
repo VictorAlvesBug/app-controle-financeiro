@@ -49,32 +49,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MyTextField(
                       validator: _validadorNome,
                       labelText: 'Nome completo',
-                      onChanged: (value) => userName = value,
+                      onChanged: (value) {
+                        userName = value;
+                        setState(() {});
+                      },
                       iconData: Icons.people_rounded,
+                      valido: _validadorNome(userName) == null,
                     ),
                     const SizedBox(height: 10),
                     MyTextField(
                       validator: _validadorEmail,
                       labelText: 'E-mail',
-                      onChanged: (value) => userEmail = value.toLowerCase().trim(),
+                      onChanged: (value) {
+                        userEmail = value.toLowerCase().trim();
+                        setState(() {});
+                      },
                       iconData: Icons.alternate_email_outlined,
+                      valido: _validadorEmail(userEmail) == null,
                     ),
                     const SizedBox(height: 10),
                     MyTextField(
                       validator: _validadorSenha,
                       obscureText: !exibirSenha,
                       labelText: 'Senha',
-                      onChanged: (newText) => userPassword = newText,
+                      onChanged: (newText) {
+                        userPassword = newText;
+                        setState(() {});
+                      },
                       iconData: Icons.lock_outline,
+                      valido: _validadorSenha(userPassword) == null,
                     ),
                     const SizedBox(height: 10),
                     MyTextField(
                       validator: _validadorConfirmacaoSenha,
                       obscureText: !exibirSenha,
                       labelText: 'Confirmação da senha',
-                      onChanged: (newText) =>
-                          userPasswordConfirmation = newText,
+                      onChanged: (newText) {
+                        userPasswordConfirmation = newText;
+                        setState(() {});
+                      },
                       iconData: Icons.lock_outline,
+                      valido: _validadorSenha(userPassword) == null
+                          && _validadorConfirmacaoSenha(
+                              userPasswordConfirmation) ==
+                          null,
                     ),
                     const SizedBox(height: 10),
                     CheckboxListTile(
@@ -100,7 +118,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF444444),
-                          side: BorderSide(color: Theme.of(context).primaryColorLight),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColorLight),
                           foregroundColor: Theme.of(context).primaryColorLight),
                       child: const Text('Já tenho cadastro'),
                     ),

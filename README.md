@@ -1,16 +1,37 @@
 # controle_financeiro
 
-A new Flutter project.
+Aplicativo Mobile Flutter desenvolvido para a disciplina de Mobile Development
+no MBA da FIAP (43SCJ).
 
-## Getting Started
+Este aplicativo foi criado com base no aplicativo de finanças
+[Mobills](https://web.mobills.com.br/dashboard), com objetivo de melhorar o controle de suas
+receitas e despesas.
 
-This project is a starting point for a Flutter application.
+## Configurando o aplicativo
 
-A few resources to get you started if this is your first Flutter project:
+Configure a API utilizada pelo aplicativo
+[api-controle-financeiro](https://github.com/VictorAlvesBug/api-controle-financeiro).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Realize o clone do [repositório do aplicativo](https://github.com/VictorAlvesBug/app-controle-financeiro)
+executando o seguinte comando no cmd, dentro da pasta desejada:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bach
+git clone https://github.com/VictorAlvesBug/app-controle-financeiro.git
+```
+
+No Android Studio, abra o projeto recém-clonado.
+
+Abra o cmd ou o terminal da IDE, na pasta do projeto e execute o seguinte comando para carregar as
+dependências do projeto:
+
+```bash
+flutter pub get
+```
+
+Na barra superior do Android Studio, selecione o dispositivo que deseja utilizar e depois clique no
+ícone Run "main.dart".
+
+Para utilizar o aplicativo sem a necessidade de criar uma conta, utilize o seguinte login:
+
+- E-mail: usuario@anonimo.com
+- Senha: UsuarioAnonimo123

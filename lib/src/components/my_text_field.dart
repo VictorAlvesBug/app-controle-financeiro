@@ -15,6 +15,7 @@ class MyTextField extends StatelessWidget {
     this.inputFormatters,
     this.keyboardType,
     this.initialValue,
+    this.valido = false,
   }) : super(key: key);
 
   bool obscureText;
@@ -28,31 +29,42 @@ class MyTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? initialValue;
 
+  bool valido;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        obscureText: obscureText,
-        validator: validator,
-        decoration: InputDecoration(
-          floatingLabelStyle:
-              TextStyle(color: Theme.of(context).primaryColorLight),
-          labelStyle: TextStyle(color: Colors.white70),
-          label: Text(
-            labelText,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          TextFormField(
+            obscureText: obscureText,
+            validator: validator,
+            decoration: InputDecoration(
+              floatingLabelStyle:
+                  TextStyle(color: Theme.of(context).primaryColorLight),
+              labelStyle: TextStyle(color: Colors.white70),
+              label: Text(
+                labelText,
+              ),
+              focusColor: Colors.white70,
+              icon: iconData == null ? null : Icon(iconData),
+              errorStyle: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onChanged: onChanged,
+            style: TextStyle(color: Colors.white70),
+            onTap: onTap,
+            controller: controller,
+            inputFormatters: inputFormatters,
+            keyboardType: keyboardType,
+            initialValue: initialValue,
           ),
-          focusColor: Colors.white70,
-          icon: iconData == null ? null : Icon(iconData),
-          errorStyle: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        onChanged: onChanged,
-        style: TextStyle(color: Colors.white70),
-        onTap: onTap,
-        controller: controller,
-        inputFormatters: inputFormatters,
-        keyboardType: keyboardType,
-        initialValue: initialValue,
+          Positioned(
+            right: 10,
+            child: valido ? Icon(Icons.check, color: Colors.green) : Text(""),
+          ),
+        ],
       ),
     );
   }
