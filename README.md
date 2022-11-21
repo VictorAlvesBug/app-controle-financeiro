@@ -1,4 +1,4 @@
-# controle_financeiro
+# app-controle-financeiro
 
 Aplicativo Mobile Flutter desenvolvido para a disciplina de Mobile Development
 no MBA da FIAP (43SCJ).
