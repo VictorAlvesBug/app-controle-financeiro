@@ -5,31 +5,35 @@ class ResumoDTO{
   ResumoDTO ({
     required this.saldoEmConta,
     required this.totalDespesasMes,
-    required this.totalReceitasMes
+    required this.totalReceitasMes,
+    required this.mesSelecionado,
+    required this.anoSelecionado,
 });
-
-  int mes = int.parse(DateFormat('M', "pt_BR").format(DateTime.now()));
-  int ano = int.parse(DateFormat('yyyy', "pt_BR").format(DateTime.now()));
 
   final double saldoEmConta;
   final double totalDespesasMes;
   final double totalReceitasMes;
 
+  final int mesSelecionado;
+  final int anoSelecionado;
+
   String getMesAnoFormatado(){
-    var dataAux = new DateTime(ano, mes, 1);
+    var dataAux = new DateTime(anoSelecionado, mesSelecionado, 1);
     String strMes = Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAux));
-    return '$strMes/$ano';
+    return '$strMes/$anoSelecionado';
   }
 
-  void acessarMesAnterior(){
-    var dataAux = new DateTime(ano, mes-1, 1);
-    ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
-    mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
+  List<int> retornarMesAnoAnterior(){
+    var dataAux = new DateTime(anoSelecionado, mesSelecionado-1, 1);
+    var mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
+    var ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
+    return [mes, ano];
   }
 
-  void acessarMesPosterior(){
-    var dataAux = new DateTime(ano, mes+1, 1);
-    ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
-    mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
+  List<int> retornarMesAnoPosterior(){
+    var dataAux = new DateTime(anoSelecionado, mesSelecionado+1, 1);
+    var mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
+    var ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
+    return [mes, ano];
   }
 }

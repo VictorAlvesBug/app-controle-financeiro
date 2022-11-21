@@ -42,9 +42,11 @@ class _ResumoBoxState extends State<ResumoBox> {
               children: [
                 InkWell(
                     onTap: () {
-                      widget.resumoDto.acessarMesAnterior();
+                      var mesAnoAnterior = widget.resumoDto.retornarMesAnoAnterior();
+                      var mes = mesAnoAnterior[0];
+                      var ano = mesAnoAnterior[1];
                       setState(() {});
-                      //widget.callbackAtualizacaoCascata(widget.resumoDto);
+                      widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_left,
                         color: Colors.white70, size: 28)),
@@ -62,9 +64,11 @@ class _ResumoBoxState extends State<ResumoBox> {
                 ),
                 InkWell(
                     onTap: () {
-                      widget.resumoDto.acessarMesPosterior();
+                      var mesAnoAnterior = widget.resumoDto.retornarMesAnoPosterior();
+                      var mes = mesAnoAnterior[0];
+                      var ano = mesAnoAnterior[1];
                       setState(() {});
-                      //widget.callbackAtualizacaoCascata(widget.resumoDto);
+                      widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_right,
                         color: Colors.white70, size: 28)),
