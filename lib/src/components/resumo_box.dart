@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +23,8 @@ class _ResumoBoxState extends State<ResumoBox> {
   @override
   Widget build(BuildContext context) {
     final dataAtual = DateTime.now();
-    final strMesAtual = Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAtual));
+    final strMesAtual =
+        Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAtual));
     final anoAtual = DateFormat('yyyy', "pt_BR").format(dataAtual);
     final mesAnoAtualFormatado = '$strMesAtual/$anoAtual';
 
@@ -37,15 +39,34 @@ class _ResumoBoxState extends State<ResumoBox> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 10),
+            Center(
+              child: InkWell(
+                child: Icon(
+                  Icons.calendar_today,
+                  color: Colors.orange,
+                  size: 20,
+                ),
+                onTap: () async {
+                  var mesAnoAtual = widget.resumoDto.retornarMesAnoAtual();
+                  var mes = mesAnoAtual[0];
+                  var ano = mesAnoAtual[1];
+                  //setState(() {});
+                  widget.callbackAtualizacaoCascata(mes, ano);
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                     onTap: () {
-                      var mesAnoAnterior = widget.resumoDto.retornarMesAnoAnterior();
+                      var mesAnoAnterior =
+                          widget.resumoDto.retornarMesAnoAnterior();
                       var mes = mesAnoAnterior[0];
                       var ano = mesAnoAnterior[1];
-                      setState(() {});
+                      //setState(() {});
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_left,
@@ -58,23 +79,27 @@ class _ResumoBoxState extends State<ResumoBox> {
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
-                      fontWeight: mesAnoAtualFormatado == widget.resumoDto.getMesAnoFormatado() ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: mesAnoAtualFormatado ==
+                              widget.resumoDto.getMesAnoFormatado()
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                 ),
                 InkWell(
                     onTap: () {
-                      var mesAnoAnterior = widget.resumoDto.retornarMesAnoPosterior();
+                      var mesAnoAnterior =
+                          widget.resumoDto.retornarMesAnoPosterior();
                       var mes = mesAnoAnterior[0];
                       var ano = mesAnoAnterior[1];
-                      setState(() {});
+                      //setState(() {});
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_right,
                         color: Colors.white70, size: 28)),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             const Text(
               'Saldo em conta',
               style: TextStyle(

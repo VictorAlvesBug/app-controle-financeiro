@@ -36,4 +36,10 @@ class ResumoDTO{
     var ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
     return [mes, ano];
   }
+
+  List<int> retornarMesAnoAtual(){
+    var mes = int.parse(DateFormat('M', "pt_BR").format(DateTime.now()));
+    var ano = int.parse(DateFormat('yyyy', "pt_BR").format(DateTime.now()));
+    return [mes, ano];
+  }
 }

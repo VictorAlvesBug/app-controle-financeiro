@@ -21,10 +21,11 @@ git clone https://github.com/VictorAlvesBug/app-controle-financeiro.git
 
 No Android Studio, abra o projeto recém-clonado.
 
-Abra o cmd ou o terminal da IDE, na pasta do projeto e execute o seguinte comando para carregar as
+Abra o cmd ou o terminal da IDE, na pasta do projeto e execute os seguintes comandos para carregar as
 dependências do projeto:
 
 ```bash
+flutter upgrade
 flutter pub get
 ```
 
