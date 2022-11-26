@@ -9,8 +9,8 @@ class Utils {
 
   static exibirModalConfirmacao({
     required BuildContext context,
-    required String tituloModal,
-    required String textoModal,
+    required Widget tituloModal,
+    required Widget textoModal,
     void Function()? callbackSim,
     String textoBotaoSim = "Sim",
     void Function()? callbackNao,
@@ -44,8 +44,8 @@ class Utils {
 
     AlertDialog alert = AlertDialog(
       backgroundColor: Color(0xFF444444),
-      title: Text(tituloModal, style: TextStyle(color: Colors.white70)),
-      content: Text(textoModal, style: TextStyle(color: Colors.white70)),
+      title: tituloModal,
+      content: textoModal,
       actions: [
         botaoSim,
         botaoNao,
