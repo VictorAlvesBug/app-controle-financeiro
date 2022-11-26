@@ -19,14 +19,29 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  var userName = '';
-  var userEmail = '';
-  var userPassword = '';
-  var userPasswordConfirmation = '';
-
-  bool exibirSenha = false;
+  //var userName = '';
+  //var userEmail = '';
+  //var userPassword = '';
+  //var userPasswordConfirmation = '';
+  //bool exibirSenha = false;
 
   final _formKey = GlobalKey<FormState>();
+
+  final _nomeNotifier = ValueNotifier<String>('');
+  final _emailNotifier = ValueNotifier<String>('');
+  final _senhaNotifier = ValueNotifier<String>('');
+  final _confirmacaoSenhaNotifier = ValueNotifier<String>('');
+  final _exibirSenhaNotifier = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    _nomeNotifier.dispose();
+    _emailNotifier.dispose();
+    _senhaNotifier.dispose();
+    _confirmacaoSenhaNotifier.dispose();
+    _exibirSenhaNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,65 +61,94 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     const AppLogo(size: 60),
                     const SizedBox(height: 20),
-                    MyTextField(
-                      validator: _validadorNome,
-                      labelText: 'Nome completo',
-                      onChanged: (value) {
-                        userName = value;
-                        setState(() {});
-                      },
-                      iconData: Icons.people_rounded,
-                      valido: _validadorNome(userName) == null,
+                    ValueListenableBuilder(
+                      valueListenable: _nomeNotifier,
+                      builder: (_, nome, __) => MyTextField(
+                        validator: _validadorNome,
+                        labelText: 'Nome completo',
+                        onChanged: (value) {
+                          _nomeNotifier.value = value;
+                          //userName = value;
+                          //setState(() {});
+                        },
+                        iconData: Icons.people_rounded,
+                        valido: _validadorNome(nome) == null,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    MyTextField(
-                      validator: _validadorEmail,
-                      labelText: 'E-mail',
-                      onChanged: (value) {
-                        userEmail = value.toLowerCase().trim();
-                        setState(() {});
-                      },
-                      iconData: Icons.alternate_email_outlined,
-                      valido: _validadorEmail(userEmail) == null,
+                    ValueListenableBuilder(
+                      valueListenable: _emailNotifier,
+                      builder: (_, email, __) => MyTextField(
+                        validator: _validadorEmail,
+                        labelText: 'E-mail',
+                        onChanged: (value) {
+                          _emailNotifier.value = value.toLowerCase().trim();
+                          //userEmail = value.toLowerCase().trim();
+                          //setState(() {});
+                        },
+                        iconData: Icons.alternate_email_outlined,
+                        valido: _validadorEmail(email) == null,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    MyTextField(
-                      validator: _validadorSenha,
-                      obscureText: !exibirSenha,
-                      labelText: 'Senha',
-                      onChanged: (newText) {
-                        userPassword = newText;
-                        setState(() {});
-                      },
-                      iconData: Icons.lock_outline,
-                      valido: _validadorSenha(userPassword) == null,
+                    ValueListenableBuilder(
+                      valueListenable: _senhaNotifier,
+                      builder: (_, senha, __) => ValueListenableBuilder(
+                        valueListenable: _exibirSenhaNotifier,
+                        builder: (_, exibirSenha, __) => MyTextField(
+                          validator: _validadorSenha,
+                          obscureText: !exibirSenha,
+                          labelText: 'Senha',
+                          onChanged: (value) {
+                            _senhaNotifier.value = value;
+                            //userPassword = value;
+                            //setState(() {});
+                          },
+                          iconData: Icons.lock_outline,
+                          valido: _validadorSenha(senha) == null,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    MyTextField(
-                      validator: _validadorConfirmacaoSenha,
-                      obscureText: !exibirSenha,
-                      labelText: 'Confirmação da senha',
-                      onChanged: (newText) {
-                        userPasswordConfirmation = newText;
-                        setState(() {});
-                      },
-                      iconData: Icons.lock_outline,
-                      valido: _validadorSenha(userPassword) == null
-                          && _validadorConfirmacaoSenha(
-                              userPasswordConfirmation) ==
-                          null,
+                    ValueListenableBuilder(
+                      valueListenable: _senhaNotifier,
+                      builder: (_, senha, __) => ValueListenableBuilder(
+                        valueListenable: _confirmacaoSenhaNotifier,
+                        builder: (_, confirmacaoSenha, __) => ValueListenableBuilder(
+                          valueListenable: _exibirSenhaNotifier,
+                          builder: (_, exibirSenha, __) => MyTextField(
+                            validator: _validadorConfirmacaoSenha,
+                            obscureText: !exibirSenha,
+                            labelText: 'Confirmação da senha',
+                            onChanged: (value) {
+                              _confirmacaoSenhaNotifier.value = value;
+                              //userPasswordConfirmation = value;
+                              //setState(() {});
+                            },
+                            iconData: Icons.lock_outline,
+                            valido: _validadorSenha(senha) == null
+                                && _validadorConfirmacaoSenha(
+                                    confirmacaoSenha) ==
+                                null,
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: Text('Exibir senha',
-                          style: TextStyle(color: Colors.white70)),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      // ListTileControlAffinity.trailing
-                      value: exibirSenha,
-                      onChanged: (value) {
-                        exibirSenha = value!;
-                        setState(() {});
-                      },
+                    ValueListenableBuilder(
+                      valueListenable: _exibirSenhaNotifier,
+                      builder: (_, exibirSenha, __) => CheckboxListTile(
+                        title: Text('Exibir senha',
+                            style: TextStyle(color: Colors.white70)),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        // ListTileControlAffinity.trailing
+                        value: exibirSenha,
+                        onChanged: (value) {
+                          _exibirSenhaNotifier.value = value!;
+                          //exibirSenha = value!;
+                          //setState(() {});
+                        },
+                      ),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
@@ -184,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _validadorConfirmacaoSenha(String? value) {
     String confirmacaoSenha = value ?? "";
 
-    if (confirmacaoSenha != userPassword) {
+    if (confirmacaoSenha != _senhaNotifier.value) {
       return "As senhas estão diferentes";
     }
 
@@ -199,14 +243,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     dynamic registerResponse =
-        await RegisterService().register(userName, userEmail, userPassword);
+        await RegisterService().register(_nomeNotifier.value, _emailNotifier.value, _senhaNotifier.value);
 
     if (!registerResponse['sucesso']) {
       Utils.message(context, registerResponse['mensagem']);
       return;
     }
 
-    dynamic loginResponse = await LoginService().login(userEmail, userPassword);
+    dynamic loginResponse = await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
 
     if (!loginResponse['sucesso']) {
       Utils.message(context, loginResponse['mensagem']);

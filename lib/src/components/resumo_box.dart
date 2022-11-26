@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../dto/resumo_dto.dart';
 import '../utils/utils.dart';
+import 'my_count_up.dart';
 
 class ResumoBox extends StatefulWidget {
   ResumoBox({
@@ -105,8 +106,14 @@ class _ResumoBoxState extends State<ResumoBox> {
               ),
             ),
             const SizedBox(height: 2),
-            Text(
-              Utils.formatarValor(widget.resumoDto.saldoEmConta),
+            MyCountUp(
+              begin: 0,
+              end: widget.resumoDto.saldoEmConta,
+              duration: Duration(seconds: 1),
+              prefix: 'R\$',
+              separator: '.',
+              decimalSeparator: ',',
+              precision: 2,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 24,
@@ -128,26 +135,34 @@ class _ResumoBoxState extends State<ResumoBox> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Receitas',
-                          style: TextStyle(
-                            color: Color(0xFFA3A3A3),
-                            fontSize: 14,
+                    Container(
+                      width: 100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Receitas',
+                            style: TextStyle(
+                              color: Color(0xFFA3A3A3),
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          Utils.formatarValor(
-                              widget.resumoDto.totalReceitasMes),
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 20,
+                          SizedBox(height: 2),
+                          MyCountUp(
+                            begin: 0,
+                            end: widget.resumoDto.totalReceitasMes,
+                            duration: Duration(seconds: 1),
+                            prefix: 'R\$',
+                            separator: '.',
+                            decimalSeparator: ',',
+                            precision: 2,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -163,26 +178,34 @@ class _ResumoBoxState extends State<ResumoBox> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Despesas',
-                          style: TextStyle(
-                            color: Color(0xFFA3A3A3),
-                            fontSize: 14,
+                    Container(
+                      width: 100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Despesas',
+                            style: TextStyle(
+                              color: Color(0xFFA3A3A3),
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          Utils.formatarValor(
-                              widget.resumoDto.totalDespesasMes),
-                          style: TextStyle(
-                            color: Colors.deepOrange,
-                            fontSize: 20,
+                          SizedBox(height: 2),
+                          MyCountUp(
+                            begin: 0,
+                            end: widget.resumoDto.totalDespesasMes,
+                            duration: Duration(seconds: 1),
+                            prefix: 'R\$',
+                            separator: '.',
+                            decimalSeparator: ',',
+                            precision: 2,
+                            style: TextStyle(
+                              color: Colors.deepOrange,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
