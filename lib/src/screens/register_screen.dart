@@ -19,11 +19,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  //var userName = '';
-  //var userEmail = '';
-  //var userPassword = '';
-  //var userPasswordConfirmation = '';
-  //bool exibirSenha = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -51,8 +46,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              constraints: BoxConstraints(minWidth: 250, maxWidth: 500),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              constraints: const BoxConstraints(minWidth: 250, maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -68,8 +63,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         labelText: 'Nome completo',
                         onChanged: (value) {
                           _nomeNotifier.value = value;
-                          //userName = value;
-                          //setState(() {});
                         },
                         iconData: Icons.people_rounded,
                         valido: _validadorNome(nome) == null,
@@ -83,8 +76,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         labelText: 'E-mail',
                         onChanged: (value) {
                           _emailNotifier.value = value.toLowerCase().trim();
-                          //userEmail = value.toLowerCase().trim();
-                          //setState(() {});
                         },
                         iconData: Icons.alternate_email_outlined,
                         valido: _validadorEmail(email) == null,
@@ -101,8 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           labelText: 'Senha',
                           onChanged: (value) {
                             _senhaNotifier.value = value;
-                            //userPassword = value;
-                            //setState(() {});
                           },
                           iconData: Icons.lock_outline,
                           valido: _validadorSenha(senha) == null,
@@ -122,8 +111,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: 'Confirmação da senha',
                             onChanged: (value) {
                               _confirmacaoSenhaNotifier.value = value;
-                              //userPasswordConfirmation = value;
-                              //setState(() {});
                             },
                             iconData: Icons.lock_outline,
                             valido: _validadorSenha(senha) == null
@@ -138,15 +125,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ValueListenableBuilder(
                       valueListenable: _exibirSenhaNotifier,
                       builder: (_, exibirSenha, __) => CheckboxListTile(
-                        title: Text('Exibir senha',
+                        title: const Text('Exibir senha',
                             style: TextStyle(color: Colors.white70)),
                         controlAffinity: ListTileControlAffinity.leading,
                         // ListTileControlAffinity.trailing
                         value: exibirSenha,
                         onChanged: (value) {
                           _exibirSenhaNotifier.value = value!;
-                          //exibirSenha = value!;
-                          //setState(() {});
                         },
                       ),
                     ),

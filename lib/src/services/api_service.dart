@@ -27,7 +27,7 @@ class ApiService {
       double totalDespesas = responseJson['dados']['totalDespesas'];
       double saldoTotal = responseJson['dados']['saldoTotal'];
 
-      SaldoDTO saldoDto = new SaldoDTO(
+      SaldoDTO saldoDto = SaldoDTO(
         totalReceitas: totalReceitas,
         totalDespesas: totalDespesas,
         saldoTotal: saldoTotal,
@@ -37,7 +37,7 @@ class ApiService {
     }
 
     print(responseJson['mensagem']);
-    return new SaldoDTO();
+    return SaldoDTO();
   }
 
   static Future<List<TransacaoDTO>> listar(int mes, int ano) async {

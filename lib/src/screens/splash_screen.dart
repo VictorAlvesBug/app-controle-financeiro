@@ -17,7 +17,7 @@ class SplashScreen extends StatelessWidget {
     Future.delayed(const Duration(seconds: 3), () async {
       String? userId = await LoginService().retornarUserId();
 
-      if (userId == null || userId.length == 0) {
+      if (userId == null || userId.isEmpty) {
         Navigator.pushReplacementNamed(context, LoginScreen.id);
       } else {
         Navigator.pushReplacementNamed(context, HomeScreen.id);
@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
     });
 
     return const Scaffold(
-      backgroundColor: const Color(0xFF444444),
+      backgroundColor: Color(0xFF444444),
       body: SafeArea(
         child: Center(child: AppLogo(size: 80, exibirSlogan: true)),
       ),

@@ -17,12 +17,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var userEmail = '';
-  var userPassword = '';
-
-  bool exibirSenha = false;
-
   final _formKey = GlobalKey<FormState>();
+
+  final _emailNotifier = ValueNotifier<String>('');
+  final _senhaNotifier = ValueNotifier<String>('');
+  final _exibirSenhaNotifier = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              constraints: BoxConstraints(minWidth: 250, maxWidth: 500),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              constraints: const BoxConstraints(minWidth: 250, maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -42,37 +41,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const AppLogo(size: 60),
                     const SizedBox(height: 20),
-                    MyTextField(
-                      validator: _validadorEmail,
-                      labelText: 'E-mail',
-                      onChanged: (value) {
-                        userEmail = value.toLowerCase().trim();
-                        setState(() {});
-                      },
-                      iconData: Icons.alternate_email_outlined,
-                      valido: _validadorEmail(userEmail) == null,
+                    ValueListenableBuilder(
+                      valueListenable: _emailNotifier,
+                      builder: (_, email, __) => MyTextField(
+                        validator: _validadorEmail,
+                        labelText: 'E-mail',
+                        onChanged: (value) {
+                          _emailNotifier.value = value.toLowerCase().trim();
+                        },
+                        iconData: Icons.alternate_email_outlined,
+                        valido: _validadorEmail(email) == null,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    MyTextField(
-                      validator: _validadorSenha,
-                      labelText: 'Senha',
-                      obscureText: !exibirSenha,
-                      onChanged: (value) {
-                        userPassword = value;
-                        setState(() {});
-                      },
-                      iconData: Icons.lock_outline,
-                      valido: _validadorSenha(userPassword) == null,
+                    ValueListenableBuilder(
+                      valueListenable: _senhaNotifier,
+                      builder: (_, senha, __) => ValueListenableBuilder(
+                        valueListenable: _exibirSenhaNotifier,
+                        builder: (_, exibirSenha, __) => MyTextField(
+                          validator: _validadorSenha,
+                          labelText: 'Senha',
+                          obscureText: !exibirSenha,
+                          onChanged: (value) {
+                            _senhaNotifier.value = value;
+                          },
+                          iconData: Icons.lock_outline,
+                          valido: _validadorSenha(senha) == null,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: Text('Exibir senha', style: TextStyle(color: Colors.white70)),
-                      controlAffinity: ListTileControlAffinity.leading, // ListTileControlAffinity.trailing
-                      value: exibirSenha,
-                      onChanged: (value) {
-                        exibirSenha = value!;
-                        setState(() { });
-                      },
+                    ValueListenableBuilder(
+                      valueListenable: _exibirSenhaNotifier,
+                      builder: (_, exibirSenha, __) => CheckboxListTile(
+                        title: const Text('Exibir senha', style: TextStyle(color: Colors.white70)),
+                        controlAffinity: ListTileControlAffinity.leading, // ListTileControlAffinity.trailing
+                        value: exibirSenha,
+                        onChanged: (value) {
+                          _exibirSenhaNotifier.value = value!;
+                        },
+                      ),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
@@ -145,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
       {
         return;
       }
-    dynamic loginResponse = await LoginService().login(userEmail, userPassword);
+    dynamic loginResponse = await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
 
     if(loginResponse['sucesso']){
       Utils.message(context, loginResponse['mensagem']);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppLogo extends StatelessWidget {
@@ -18,7 +17,7 @@ class AppLogo extends StatelessWidget {
     final double sizedBoxHeight = size / 10;
     final double textFontSize = size * 0.30;
 
-    Widget textSlogan = SizedBox();
+    Widget textSlogan = const SizedBox();
 
     if(exibirSlogan == true) {
       textSlogan = Text(
@@ -33,7 +32,7 @@ class AppLogo extends StatelessWidget {
 
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 600),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

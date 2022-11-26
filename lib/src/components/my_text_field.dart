@@ -44,16 +44,16 @@ class MyTextField extends StatelessWidget {
             decoration: InputDecoration(
               floatingLabelStyle:
                   TextStyle(color: Theme.of(context).primaryColorLight),
-              labelStyle: TextStyle(color: Colors.white70),
+              labelStyle: const TextStyle(color: Colors.white70),
               label: Text(
                 labelText,
               ),
               focusColor: Colors.white70,
               icon: iconData == null ? null : Icon(iconData),
-              errorStyle: TextStyle(fontWeight: FontWeight.bold),
+              errorStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onChanged: onChanged,
-            style: TextStyle(color: Colors.white70),
+            style: const TextStyle(color: Colors.white70),
             onTap: onTap,
             controller: controller,
             inputFormatters: inputFormatters,
@@ -62,7 +62,7 @@ class MyTextField extends StatelessWidget {
           ),
           Positioned(
             right: 10,
-            child: valido ? Icon(Icons.check, color: Colors.green) : Text(""),
+            child: valido ? const Icon(Icons.check, color: Colors.green) : const Text(""),
           ),
         ],
       ),

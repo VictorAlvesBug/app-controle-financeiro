@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:controle_financeiro/src/components/resumo_box.dart';
 import 'package:controle_financeiro/src/controllers/transacao_controller.dart';
 import 'package:controle_financeiro/src/services/login_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -38,7 +37,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<TransacaoDTO> listaTransacoes = [];
-  String nomeUsuario = '';
+
   final fabAberto = ValueNotifier(false);
 
   int mesSelecionado =
@@ -54,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
     anoSelecionado: 2022,
   );
 
+  final _nomeUsuarioNotifier = ValueNotifier<String>("");
+  final _loadingNotifier = ValueNotifier<bool>(true);
   final _exibicaoFabNotifier = ValueNotifier<bool>(true);
 
   @override
@@ -73,17 +74,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     LoginService().retornarUserId().then((userId) {
-    if (userId == null || userId.length == 0) {
-      Navigator.pushReplacementNamed(context, LoginScreen.id);
-    }
+      if (userId == null || userId.isEmpty) {
+        Navigator.pushReplacementNamed(context, LoginScreen.id);
+      }
     });
-
 
     List<TransacoesDiaDTO> listaTransacoesDia =
         TransacoesDiaDTO.getListaTransacoesMes(listaTransacoes,
             mes: resumoDto.mesSelecionado, ano: resumoDto.anoSelecionado);
 
     const duracaoAnimacaoFab = Duration(milliseconds: 300);
+
+    Widget loadingWidget = const Center(
+      child: SizedBox(
+        width: 30,
+        height: 30,
+        child: CircularProgressIndicator(color: Colors.indigo),
+      ),
+    );
+
+    Widget listaVaziaWidget = const Center(
+      child: Text(
+        "Você não possui transações neste mês",
+        style: TextStyle(color: Colors.white70),
+      ),
+    );
 
     return WillPopScope(
       onWillPop: () async {
@@ -102,11 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
         body: NotificationListener<UserScrollNotification>(
           onNotification: (notification) {
             final ScrollDirection direction = notification.direction;
-              if (direction == ScrollDirection.reverse) {
-                _exibicaoFabNotifier.value = false;
-              } else if (direction == ScrollDirection.forward) {
-                _exibicaoFabNotifier.value = true;
-              }
+            if (direction == ScrollDirection.reverse) {
+              _exibicaoFabNotifier.value = false;
+            } else if (direction == ScrollDirection.forward) {
+              _exibicaoFabNotifier.value = true;
+            }
             return true;
           },
           child: SafeArea(
@@ -130,13 +145,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Olá, $nomeUsuario',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 16),
+                          ValueListenableBuilder(
+                            valueListenable: _nomeUsuarioNotifier,
+                            builder: (_, nomeUsuario, __) => Text(
+                              'Olá, $nomeUsuario',
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 16),
+                            ),
                           ),
                           InkWell(
-                            child: Icon(Icons.logout, color: Colors.white70),
+                            child:
+                                const Icon(Icons.logout, color: Colors.white70),
                             onTap: () async {
                               await LoginService().logout();
                               Navigator.pushReplacementNamed(
@@ -149,105 +168,136 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   child: ResumoBox(
                       resumoDto: resumoDto,
                       callbackAtualizacaoCascata: (int mes, int ano) {
+                        _loadingNotifier.value = true;
                         mesSelecionado = mes;
                         anoSelecionado = ano;
                         _atualizarTela();
                       }),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 8,
-                        top: 4,
-                        right: 8,
-                        bottom: 4,
+                      left: 8,
+                      top: 4,
+                      right: 8,
+                      bottom: 4,
                     ),
-                    child: ListView.separated(
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (_, indiceTransacoesDia) {
-                          final transacoesDia =
-                              listaTransacoesDia[indiceTransacoesDia];
+                    child: ValueListenableBuilder(
+                      valueListenable: _loadingNotifier,
+                      builder: (_, isLoading, __) => isLoading
+                          ? loadingWidget
+                          : (listaTransacoesDia.isEmpty
+                              ? listaVaziaWidget
+                              : ListView.separated(
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (_, indiceTransacoesDia) {
+                                    final transacoesDia =
+                                        listaTransacoesDia[indiceTransacoesDia];
 
-                          return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(Utils.formatarData_EEEEdd(transacoesDia.data),
-                                    style: TextStyle(
-                                        color: Colors.white70, fontSize: 16)),
-                                SizedBox(height: 5),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  itemBuilder: (_, indiceTransacao) {
-                                    final transacao = transacoesDia
-                                        .listaTransacoes[indiceTransacao];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            Utils.formatarData_EEEEdd(
+                                                transacoesDia.data),
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 16)),
+                                        const SizedBox(height: 5),
+                                        ListView.separated(
+                                          shrinkWrap: true,
+                                          itemBuilder: (_, indiceTransacao) {
+                                            final transacao =
+                                                transacoesDia.listaTransacoes[
+                                                    indiceTransacao];
 
-                                    return Expanded(
-                                      child: ListTile(
-                                        tileColor: const Color(0xFF444444),
-                                        leading: Container(
-                                          width: 40,
-                                          height: 40,
-                                          child: Icon(Icons.monetization_on_outlined,
-                                              color: Colors.white70),
-                                          decoration: BoxDecoration(
-                                            color: transacao.getCorTipoTransacao(),
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
+                                            return Expanded(
+                                              child: ListTile(
+                                                tileColor:
+                                                    const Color(0xFF444444),
+                                                leading: Container(
+                                                  width: 40,
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: transacao
+                                                        .getCorTipoTransacao(),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: const Icon(
+                                                      Icons
+                                                          .monetization_on_outlined,
+                                                      color: Colors.white70),
+                                                ),
+                                                trailing: InkWell(
+                                                  child: const Icon(
+                                                    Icons.delete,
+                                                    color: Colors.white70,
+                                                  ),
+                                                  onTap: () =>
+                                                      _modalExcluir(transacao),
+                                                ),
+                                                onTap: () {
+                                                  TransacaoController()
+                                                      .editar(context,
+                                                          transacao.codigo)
+                                                      .then((_) {
+                                                    _atualizarTela();
+                                                  });
+                                                },
+                                                onLongPress: () =>
+                                                    _modalExcluir(transacao),
+                                                title: Text(
+                                                  transacao.descricao,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  Utils.formatarValor(
+                                                      transacao.valor),
+                                                  style: TextStyle(
+                                                    color: transacao
+                                                        .getCorTipoTransacao(),
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                dense: true,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5))),
+                                              ),
+                                            );
+                                          },
+                                          separatorBuilder: (_, index) =>
+                                              const SizedBox(height: 10),
+                                          itemCount: transacoesDia
+                                              .listaTransacoes.length,
                                         ),
-                                        trailing: InkWell(
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.white70,
-                                          ),
-                                          onTap: () => _modalExcluir(transacao),
-                                        ),
-                                        onTap: () {
-                                          TransacaoController()
-                                              .editar(context, transacao.codigo)
-                                              .then((_) {
-                                            _atualizarTela();
-                                          });
-                                        },
-                                        onLongPress: () => _modalExcluir(transacao),
-                                        title: Text(
-                                          transacao.descricao,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                          Utils.formatarValor(transacao.valor),
-                                          style: TextStyle(
-                                            color: transacao.getCorTipoTransacao(),
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        dense: true,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(5))),
-                                      ),
+                                      ],
                                     );
                                   },
                                   separatorBuilder: (_, index) =>
-                                      const SizedBox(height: 10),
-                                  itemCount: transacoesDia.listaTransacoes.length,
-                                ),
-                              ],
-                          );
-                        },
-                        separatorBuilder: (_, index) => SizedBox(height: 15),
-                        itemCount: listaTransacoesDia.length,
-                        shrinkWrap: true,
-                      ),
+                                      const SizedBox(height: 15),
+                                  itemCount: listaTransacoesDia.length,
+                                  shrinkWrap: true,
+                                )),
+                    ),
                   ),
                 ),
               ],
@@ -258,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
           valueListenable: _exibicaoFabNotifier,
           builder: (_, exibirFab, __) => AnimatedSlide(
             duration: duracaoAnimacaoFab,
-            offset: exibirFab ? Offset.zero : Offset(0, 2),
+            offset: exibirFab ? Offset.zero : const Offset(0, 2),
             child: AnimatedOpacity(
               duration: duracaoAnimacaoFab,
               opacity: exibirFab ? 1 : 0,
@@ -272,11 +322,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 openCloseDial: fabAberto,
                 children: [
                   SpeedDialChild(
-                    child: Icon(Icons.arrow_upward, color: Colors.white70),
+                    child:
+                        const Icon(Icons.arrow_upward, color: Colors.white70),
                     backgroundColor: Colors.green,
                     label: 'Adicionar receita',
-                    labelBackgroundColor: Color(0xFF333333),
-                    labelStyle: TextStyle(color: Colors.white70),
+                    labelBackgroundColor: const Color(0xFF333333),
+                    labelStyle: const TextStyle(color: Colors.white70),
                     onTap: () {
                       TransacaoController()
                           .cadastrar(context, TipoTransacaoEnum.Receita)
@@ -286,11 +337,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   SpeedDialChild(
-                    child: Icon(Icons.arrow_downward, color: Colors.white70),
+                    child:
+                        const Icon(Icons.arrow_downward, color: Colors.white70),
                     backgroundColor: Colors.deepOrange,
                     label: 'Adicionar despesa',
-                    labelBackgroundColor: Color(0xFF333333),
-                    labelStyle: TextStyle(color: Colors.white70),
+                    labelBackgroundColor: const Color(0xFF333333),
+                    labelStyle: const TextStyle(color: Colors.white70),
                     onTap: () {
                       TransacaoController()
                           .cadastrar(context, TipoTransacaoEnum.Despesa)
@@ -314,8 +366,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Utils.exibirModalConfirmacao(
       context: context,
-      tituloModal: SimpleRichText("Excluir $strTipo", style: TextStyle(color: Colors.white70)),
-      textoModal: SimpleRichText('A $strTipo "*${transacao.descricao}*", de *$strValor*, será excluída.', style: TextStyle(color: Colors.white70)),
+      tituloModal: SimpleRichText("Excluir $strTipo",
+          style: const TextStyle(color: Colors.white70)),
+      textoModal: SimpleRichText(
+          'A $strTipo "*${transacao.descricao}*", de *$strValor*, será excluída.',
+          style: const TextStyle(color: Colors.white70)),
       textoBotaoSim: "OK",
       textoBotaoNao: "Cancelar",
       callbackSim: () async {
@@ -330,8 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _retornarNomeUsuario() async {
-    nomeUsuario = await LoginService().retornarFirstName();
-    setState(() {});
+    _nomeUsuarioNotifier.value = await LoginService().retornarFirstName();
   }
 
   Future<void> _atualizarTela() async {
@@ -340,7 +394,9 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((lista) async {
       listaTransacoes = lista;
       resumoDto = await _retornarResumo();
-      setState(() {});
+      _loadingNotifier.value = false;
+      setState(
+          () {}); //Neste caso é necessário, pois o build precisa ser executado novamente para renderizar toda a tela
     });
     return;
   }
@@ -353,13 +409,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Set<TransacaoDTO> setListaTransacoes = Set.from(listaTransacoes);
 
-    setListaTransacoes.forEach((TransacaoDTO transacao) {
+    for (var transacao in setListaTransacoes) {
       if (transacao.ehReceita()) {
         totalReceitasMes += transacao.valor;
       } else {
         totalDespesasMes += transacao.valor;
       }
-    });
+    }
 
     return ResumoDTO(
       saldoEmConta: saldoDto.saldoTotal,

@@ -18,20 +18,20 @@ class ResumoDTO{
   final int anoSelecionado;
 
   String getMesAnoFormatado(){
-    var dataAux = new DateTime(anoSelecionado, mesSelecionado, 1);
+    var dataAux = DateTime(anoSelecionado, mesSelecionado, 1);
     String strMes = Utils.capitalize(DateFormat("MMMM", "pt_BR").format(dataAux));
     return '$strMes/$anoSelecionado';
   }
 
   List<int> retornarMesAnoAnterior(){
-    var dataAux = new DateTime(anoSelecionado, mesSelecionado-1, 1);
+    var dataAux = DateTime(anoSelecionado, mesSelecionado-1, 1);
     var mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
     var ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
     return [mes, ano];
   }
 
   List<int> retornarMesAnoPosterior(){
-    var dataAux = new DateTime(anoSelecionado, mesSelecionado+1, 1);
+    var dataAux = DateTime(anoSelecionado, mesSelecionado+1, 1);
     var mes = int.parse(DateFormat('M', "pt_BR").format(dataAux));
     var ano = int.parse(DateFormat('yyyy', "pt_BR").format(dataAux));
     return [mes, ano];

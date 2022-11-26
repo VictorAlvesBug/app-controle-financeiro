@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +42,7 @@ class _ResumoBoxState extends State<ResumoBox> {
             const SizedBox(height: 5),
             Center(
               child: InkWell(
-                child: Icon(
+                child: const Icon(
                   Icons.calendar_today,
                   color: Colors.orange,
                   size: 20,
@@ -68,7 +67,7 @@ class _ResumoBoxState extends State<ResumoBox> {
                       var ano = mesAnoAnterior[1];
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
-                    child: Icon(Icons.keyboard_arrow_left,
+                    child: const Icon(Icons.keyboard_arrow_left,
                         color: Colors.white70, size: 28)),
                 Container(
                   width: 200,
@@ -93,7 +92,7 @@ class _ResumoBoxState extends State<ResumoBox> {
                       var ano = mesAnoAnterior[1];
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
-                    child: Icon(Icons.keyboard_arrow_right,
+                    child: const Icon(Icons.keyboard_arrow_right,
                         color: Colors.white70, size: 28)),
               ],
             ),
@@ -109,12 +108,12 @@ class _ResumoBoxState extends State<ResumoBox> {
             MyCountUp(
               begin: 0,
               end: widget.resumoDto.saldoEmConta,
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               prefix: 'R\$',
               separator: '.',
               decimalSeparator: ',',
               precision: 2,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 24,
               ),
@@ -128,35 +127,35 @@ class _ResumoBoxState extends State<ResumoBox> {
                     Container(
                       width: 40,
                       height: 40,
-                      child: Icon(Icons.arrow_upward, color: Colors.white70),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(20),
                       ),
+                      child: const Icon(Icons.arrow_upward, color: Colors.white70),
                     ),
-                    SizedBox(width: 10),
-                    Container(
-                      width: 100,
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 110,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Receitas',
                             style: TextStyle(
                               color: Color(0xFFA3A3A3),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 2),
+                          const SizedBox(height: 2),
                           MyCountUp(
                             begin: 0,
                             end: widget.resumoDto.totalReceitasMes,
-                            duration: Duration(seconds: 1),
+                            duration: const Duration(seconds: 1),
                             prefix: 'R\$',
                             separator: '.',
                             decimalSeparator: ',',
                             precision: 2,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.green,
                               fontSize: 20,
                             ),
@@ -171,35 +170,35 @@ class _ResumoBoxState extends State<ResumoBox> {
                     Container(
                       width: 40,
                       height: 40,
-                      child: Icon(Icons.arrow_downward, color: Colors.white70),
                       decoration: BoxDecoration(
                         color: Colors.deepOrange,
                         borderRadius: BorderRadius.circular(20),
                       ),
+                      child: const Icon(Icons.arrow_downward, color: Colors.white70),
                     ),
-                    SizedBox(width: 10),
-                    Container(
-                      width: 100,
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 110,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Despesas',
                             style: TextStyle(
                               color: Color(0xFFA3A3A3),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 2),
+                          const SizedBox(height: 2),
                           MyCountUp(
                             begin: 0,
                             end: widget.resumoDto.totalDespesasMes,
-                            duration: Duration(seconds: 1),
+                            duration: const Duration(seconds: 1),
                             prefix: 'R\$',
                             separator: '.',
                             decimalSeparator: ',',
                             precision: 2,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.deepOrange,
                               fontSize: 20,
                             ),

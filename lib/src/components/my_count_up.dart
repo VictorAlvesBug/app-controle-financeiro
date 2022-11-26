@@ -20,7 +20,7 @@ class MyCountUp extends StatefulWidget {
   final String prefix;
   final String suffix;
 
-  MyCountUp({
+  const MyCountUp({
     Key? key,
     required this.begin,
     required this.end,
@@ -103,7 +103,7 @@ class _MyCountUpState extends State<MyCountUp> with TickerProviderStateMixin {
 }
 
 class _MyCountUpAnimatedText extends AnimatedWidget {
-  final RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+  final RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
 
   final Animation<double> animation;
   final int precision;
@@ -142,7 +142,7 @@ class _MyCountUpAnimatedText extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    String mainValue = this.animation.value.toStringAsFixed(precision);
+    String mainValue = animation.value.toStringAsFixed(precision);
 
     if(separator != null){
       mainValue = mainValue
@@ -154,15 +154,15 @@ class _MyCountUpAnimatedText extends AnimatedWidget {
 
     return Text(
       strText,
-      style: this.style,
-      textAlign: this.textAlign,
-      textDirection: this.textDirection,
-      locale: this.locale,
-      softWrap: this.softWrap,
-      overflow: this.overflow,
-      textScaleFactor: this.textScaleFactor,
-      maxLines: this.maxLines,
-      semanticsLabel: this.semanticsLabel,
+      style: style,
+      textAlign: textAlign,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      overflow: overflow,
+      textScaleFactor: textScaleFactor,
+      maxLines: maxLines,
+      semanticsLabel: semanticsLabel,
     );
   }
 }

@@ -20,7 +20,7 @@ class TransacaoController {
 
   Future<void> cadastrar(
       BuildContext context, TipoTransacaoEnum tipoTransacao) async {
-    final CurrencyTextInputFormatter _formatadorDinheiro =
+    final CurrencyTextInputFormatter formatadorDinheiro =
         CurrencyTextInputFormatter(
             locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
 
@@ -34,31 +34,32 @@ class TransacaoController {
         builder: (context) {
           return Dialog(
             backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.all(10),
+            insetPadding: const EdgeInsets.all(10),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     minWidth: 250,
                     maxWidth: 350,
                     minHeight: 250,
                     maxHeight: 365,
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: const Color(0xFF444444)),
                   child: Form(
                     key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: ListView(
+                      shrinkWrap: true,
                       children: [
-                        Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 20)),
-                        SizedBox(height: 20),
+                        Center(
+                          child: Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
+                              style:
+                                  const TextStyle(color: Colors.white70, fontSize: 20)),
+                        ),
+                        const SizedBox(height: 20),
                         MyTextField(
                           validator: _validadorDescricao,
                           onChanged: (value) {
@@ -74,7 +75,7 @@ class TransacaoController {
                           },
                           labelText: "Valor",
                           iconData: Icons.monetization_on_outlined,
-                          inputFormatters: [_formatadorDinheiro],
+                          inputFormatters: [formatadorDinheiro],
                           keyboardType: TextInputType.number,
                         ),
                         MyTextField(
@@ -88,9 +89,15 @@ class TransacaoController {
                             await _abrirDatePicker(context);
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 40),
                         ElevatedButton(
-                          child: const Text('Salvar'),
+                          child: const SizedBox(
+                            width: double.infinity,
+                            height: 30,
+                            child: Center(
+                              child: Text('Salvar', style: TextStyle(color: Colors.white70)),
+                            ),
+                          ),
                           onPressed: () => _cadastrarTransacao(context),
                         ),
                       ],
@@ -134,31 +141,31 @@ class TransacaoController {
         builder: (context) {
           return Dialog(
             backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.all(10),
+            insetPadding: const EdgeInsets.all(10),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     minWidth: 250,
                     maxWidth: 350,
                     minHeight: 250,
                     maxHeight: 365,
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: const Color(0xFF444444)),
                   child: Form(
                     key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: ListView(
+                      shrinkWrap: true,
                       children: [
-                        Text('Alterar ${transacao.tipo.name.toLowerCase()}',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 20)),
-                        SizedBox(height: 20),
+                        Center(
+                          child: Text('Alterar ${transacao.tipo.name.toLowerCase()}',
+                              style: const TextStyle(color: Colors.white70, fontSize: 20)),
+                        ),
+                        const SizedBox(height: 20),
                         MyTextField(
                           validator: _validadorDescricao,
                           onChanged: (value) {
@@ -190,9 +197,15 @@ class TransacaoController {
                             await _abrirDatePicker(context);
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 40),
                         ElevatedButton(
-                          child: const Text('Salvar'),
+                          child: const SizedBox(
+                            width: double.infinity,
+                            height: 30,
+                            child: Center(
+                              child: Text('Salvar', style: TextStyle(color: Colors.white70)),
+                            ),
+                          ),
                           onPressed: () => _editarTransacao(context),
                         ),
                       ],
@@ -229,7 +242,7 @@ class TransacaoController {
 
   Future<void> _abrirDatePicker(BuildContext context) async {
     DateTime date = DateTime(1900);
-    FocusScope.of(context).requestFocus(new FocusNode());
+    FocusScope.of(context).requestFocus(FocusNode());
 
     dataTransacao = await showDatePicker(
           context: context,
@@ -309,7 +322,7 @@ class TransacaoController {
     } catch (error) {
       Utils.message(context, "Ocorreu um erro ao retornar saldo");
       print(error);
-      return new SaldoDTO();
+      return SaldoDTO();
     }
   }
 }

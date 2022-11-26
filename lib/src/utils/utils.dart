@@ -16,12 +16,13 @@ class Utils {
     void Function()? callbackNao,
     String textoBotaoNao = "Não",
   }) {
-    Widget botaoSim = InkWell(
+
+    Widget botaoSim = ElevatedButton(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoSim, style: TextStyle(color: Colors.white70)),
+        child: Text(textoBotaoSim, style: const TextStyle(color: Colors.white70)),
       ),
-      onTap: () {
+      onPressed: () {
         if(callbackSim != null){
           callbackSim();
         }
@@ -29,12 +30,12 @@ class Utils {
       },
     );
 
-    Widget botaoNao = InkWell(
+    Widget botaoNao = ElevatedButton(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoNao, style: TextStyle(color: Colors.white70)),
+        child: Text(textoBotaoNao, style: const TextStyle(color: Colors.white70)),
       ),
-      onTap: () {
+      onPressed: () {
         if(callbackNao != null){
           callbackNao();
         }
@@ -43,7 +44,7 @@ class Utils {
     );
 
     AlertDialog alert = AlertDialog(
-      backgroundColor: Color(0xFF444444),
+      backgroundColor: const Color(0xFF444444),
       title: tituloModal,
       content: textoModal,
       actions: [
@@ -61,7 +62,7 @@ class Utils {
   }
 
   static String formatarValor(double valor) {
-    var formatoReal = new NumberFormat("R\$#,##0.00", "pt_BR");
+    var formatoReal = NumberFormat("R\$#,##0.00", "pt_BR");
     return formatoReal.format(valor);
   }
 
@@ -132,13 +133,15 @@ class Utils {
   }
 
   static capitalize(String texto){
-    if(texto.length == 0)
+    if(texto.isEmpty) {
       return "";
+    }
 
     String primeiraLetra = texto[0].toUpperCase();
 
-    if(texto.length == 1)
+    if(texto.length == 1) {
       return primeiraLetra;
+    }
 
     String demaisLetras = texto.substring(1).toLowerCase();
 
