@@ -1,4 +1,5 @@
 import 'package:controle_financeiro/src/components/my_text_field.dart';
+import 'package:controle_financeiro/src/dto/saldo_dto.dart';
 import 'package:controle_financeiro/src/dto/transacao_dto.dart';
 import 'package:controle_financeiro/src/enums/tipo_transacao_enum.dart';
 import 'package:controle_financeiro/src/services/api_service.dart';
@@ -20,12 +21,13 @@ class TransacaoController {
   Future<void> cadastrar(
       BuildContext context, TipoTransacaoEnum tipoTransacao) async {
     final CurrencyTextInputFormatter _formatadorDinheiro =
-    CurrencyTextInputFormatter(
-        locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
+        CurrencyTextInputFormatter(
+            locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
 
     tipo = tipoTransacao;
 
-    dataTransacaoController = TextEditingController(text: Utils.formatarData_ddMMyyyy(DateTime.now()));
+    dataTransacaoController = TextEditingController(
+        text: Utils.formatarData_ddMMyyyy(DateTime.now()));
 
     return showDialog(
         context: context,
@@ -55,7 +57,7 @@ class TransacaoController {
                       children: [
                         Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
                             style:
-                            TextStyle(color: Colors.white70, fontSize: 20)),
+                                TextStyle(color: Colors.white70, fontSize: 20)),
                         SizedBox(height: 20),
                         MyTextField(
                           validator: _validadorDescricao,
@@ -101,33 +103,31 @@ class TransacaoController {
         });
   }
 
-  Future<void> editar(
-      BuildContext context, String? _codigo) async {
-    if(_codigo == null)
-      {
-        Utils.message(context, "Código da transação está inválido");
-        return;
-      }
+  Future<void> editar(BuildContext context, String? _codigo) async {
+    if (_codigo == null) {
+      Utils.message(context, "Código da transação está inválido");
+      return;
+    }
 
     codigo = _codigo;
 
     TransacaoDTO? transacao = await ApiService.retornar(_codigo);
 
-    if(transacao == null)
-    {
+    if (transacao == null) {
       Utils.message(context, "Transação não encontrada");
       return;
     }
 
-    dataTransacaoController = TextEditingController(text: Utils.formatarData_ddMMyyyy(transacao.data));
+    dataTransacaoController = TextEditingController(
+        text: Utils.formatarData_ddMMyyyy(transacao.data));
     tipo = transacao.tipo;
     valor = transacao.valor;
     dataTransacao = transacao.data;
     descricao = transacao.descricao;
 
     final CurrencyTextInputFormatter _formatadorDinheiro =
-    CurrencyTextInputFormatter(
-        locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
+        CurrencyTextInputFormatter(
+            locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
 
     return showDialog(
         context: context,
@@ -157,7 +157,7 @@ class TransacaoController {
                       children: [
                         Text('Alterar ${transacao.tipo.name.toLowerCase()}',
                             style:
-                            TextStyle(color: Colors.white70, fontSize: 20)),
+                                TextStyle(color: Colors.white70, fontSize: 20)),
                         SizedBox(height: 20),
                         MyTextField(
                           validator: _validadorDescricao,
@@ -232,11 +232,11 @@ class TransacaoController {
     FocusScope.of(context).requestFocus(new FocusNode());
 
     dataTransacao = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    ) ??
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        ) ??
         DateTime.now();
 
     dataTransacaoController.text = Utils.formatarData_ddMMyyyy(dataTransacao);
@@ -279,13 +279,37 @@ class TransacaoController {
     });
   }
 
-  Future<List<TransacaoDTO>> retornarTransacoes(BuildContext context) async {
+  Future<List<TransacaoDTO>> retornarTransacoes(
+    BuildContext context,
+    int mes,
+    int ano,
+  ) async {
     try {
-      return await ApiService.listar();
+      return await ApiService.listar(mes, ano);
     } catch (error) {
       Utils.message(context, "Ocorreu um erro ao retornar as transações");
       print(error);
       return [];
+    }
+  }
+
+  Future<String> deletar(BuildContext context, String? codigoTransacao) async {
+    try{
+      return await ApiService.deletar(codigoTransacao);
+    }
+    catch(error){
+      print(error);
+      return "Ocorreu um erro ao deletar a transação";
+    }
+  }
+
+  Future<SaldoDTO> retornarSaldo(BuildContext context) async {
+    try {
+      return await ApiService.retornarSaldo();
+    } catch (error) {
+      Utils.message(context, "Ocorreu um erro ao retornar saldo");
+      print(error);
+      return new SaldoDTO();
     }
   }
 }

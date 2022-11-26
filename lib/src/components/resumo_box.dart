@@ -39,7 +39,7 @@ class _ResumoBoxState extends State<ResumoBox> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             Center(
               child: InkWell(
                 child: Icon(
@@ -51,7 +51,6 @@ class _ResumoBoxState extends State<ResumoBox> {
                   var mesAnoAtual = widget.resumoDto.retornarMesAnoAtual();
                   var mes = mesAnoAtual[0];
                   var ano = mesAnoAtual[1];
-                  //setState(() {});
                   widget.callbackAtualizacaoCascata(mes, ano);
                 },
               ),
@@ -66,7 +65,6 @@ class _ResumoBoxState extends State<ResumoBox> {
                           widget.resumoDto.retornarMesAnoAnterior();
                       var mes = mesAnoAnterior[0];
                       var ano = mesAnoAnterior[1];
-                      //setState(() {});
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_left,
@@ -92,7 +90,6 @@ class _ResumoBoxState extends State<ResumoBox> {
                           widget.resumoDto.retornarMesAnoPosterior();
                       var mes = mesAnoAnterior[0];
                       var ano = mesAnoAnterior[1];
-                      //setState(() {});
                       widget.callbackAtualizacaoCascata(mes, ano);
                     },
                     child: Icon(Icons.keyboard_arrow_right,

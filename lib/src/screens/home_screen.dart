@@ -7,10 +7,12 @@ import 'package:controle_financeiro/src/services/login_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 
 import '../dto/resumo_dto.dart';
+import '../dto/saldo_dto.dart';
 import '../dto/transacao_dto.dart';
 import '../dto/transacoes_dia_dto.dart';
 import '../enums/tipo_transacao_enum.dart';
@@ -82,135 +84,147 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: Colors.black,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF444444),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Olá, $nomeUsuario',
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 16),
-                          ),
-                          InkWell(
-                            child: Icon(Icons.logout, color: Colors.white70),
-                            onTap: () async {
-                              await LoginService().logout();
-                              Navigator.pushReplacementNamed(
-                                  context, LoginScreen.id);
-                            },
-                          ),
-                        ],
-                      ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  top: 8,
+                  right: 8,
+                  bottom: 4,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF444444),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8, horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Olá, $nomeUsuario',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
+                        InkWell(
+                          child: Icon(Icons.logout, color: Colors.white70),
+                          onTap: () async {
+                            await LoginService().logout();
+                            Navigator.pushReplacementNamed(
+                                context, LoginScreen.id);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ResumoBox(
-                      resumoDto: resumoDto,
-                      callbackAtualizacaoCascata: (int mes, int ano) {
-                        mesSelecionado = mes;
-                        anoSelecionado = ano;
-                        _atualizarTela();
-                      }),
-                ),
-                SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: ResumoBox(
+                    resumoDto: resumoDto,
+                    callbackAtualizacaoCascata: (int mes, int ano) {
+                      mesSelecionado = mes;
+                      anoSelecionado = ano;
+                      _atualizarTela();
+                    }),
+              ),
+              SizedBox(height: 5),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8,
+                      top: 4,
+                      right: 8,
+                      bottom: 4,
+                  ),
                   child: ListView.separated(
-                    itemBuilder: (_, indiceTransacoesDia) {
-                      final transacoesDia =
-                          listaTransacoesDia[indiceTransacoesDia];
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (_, indiceTransacoesDia) {
+                        final transacoesDia =
+                            listaTransacoesDia[indiceTransacoesDia];
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(Utils.formatarData_EEEEdd(transacoesDia.data),
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 16)),
-                          SizedBox(height: 5),
-                          ListView.separated(
-                            itemBuilder: (_, indiceTransacao) {
-                              final transacao = transacoesDia
-                                  .listaTransacoes[indiceTransacao];
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(Utils.formatarData_EEEEdd(transacoesDia.data),
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 16)),
+                              SizedBox(height: 5),
+                              ListView.separated(
+                                shrinkWrap: true,
+                                itemBuilder: (_, indiceTransacao) {
+                                  final transacao = transacoesDia
+                                      .listaTransacoes[indiceTransacao];
 
-                              return ListTile(
-                                tileColor: const Color(0xFF444444),
-                                leading: Container(
-                                  width: 40,
-                                  height: 40,
-                                  child: Icon(Icons.monetization_on_outlined,
-                                      color: Colors.white70),
-                                  decoration: BoxDecoration(
-                                    color: transacao.getCorTipoTransacao(),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                trailing: InkWell(
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white70,
-                                  ),
-                                  onTap: () => _modalExcluir(transacao),
-                                ),
-                                onTap: () {
-                                  TransacaoController()
-                                      .editar(context, transacao.codigo)
-                                      .then((_) {
-                                    _atualizarTela();
-                                  });
+                                  return Expanded(
+                                    child: ListTile(
+                                      tileColor: const Color(0xFF444444),
+                                      leading: Container(
+                                        width: 40,
+                                        height: 40,
+                                        child: Icon(Icons.monetization_on_outlined,
+                                            color: Colors.white70),
+                                        decoration: BoxDecoration(
+                                          color: transacao.getCorTipoTransacao(),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      trailing: InkWell(
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.white70,
+                                        ),
+                                        onTap: () => _modalExcluir(transacao),
+                                      ),
+                                      onTap: () {
+                                        TransacaoController()
+                                            .editar(context, transacao.codigo)
+                                            .then((_) {
+                                          _atualizarTela();
+                                        });
+                                      },
+                                      onLongPress: () => _modalExcluir(transacao),
+                                      title: Text(
+                                        transacao.descricao,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        Utils.formatarValor(transacao.valor),
+                                        style: TextStyle(
+                                          color: transacao.getCorTipoTransacao(),
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      dense: true,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                    ),
+                                  );
                                 },
-                                onLongPress: () => _modalExcluir(transacao),
-                                title: Text(
-                                  transacao.descricao,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  Utils.formatarValor(transacao.valor),
-                                  style: TextStyle(
-                                    color: transacao.getCorTipoTransacao(),
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                dense: true,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                              );
-                            },
-                            separatorBuilder: (_, index) =>
-                                SizedBox(height: 10),
-                            itemCount: transacoesDia.listaTransacoes.length,
-                            shrinkWrap: true,
-                          ),
-                        ],
-                      );
-                    },
-                    separatorBuilder: (_, index) => SizedBox(height: 15),
-                    itemCount: listaTransacoesDia.length,
-                    shrinkWrap: true,
-                  ),
+                                separatorBuilder: (_, index) =>
+                                    const SizedBox(height: 10),
+                                itemCount: transacoesDia.listaTransacoes.length,
+                              ),
+                            ],
+                        );
+                      },
+                      separatorBuilder: (_, index) => SizedBox(height: 15),
+                      itemCount: listaTransacoesDia.length,
+                      shrinkWrap: true,
+                    ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         floatingActionButton: SpeedDial(
@@ -263,7 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
       textoModal:
           "Deseja mesmo excluir a ${transacao.tipo.name.toLowerCase()} '${transacao.descricao}'?",
       callbackSim: () async {
-        ApiService.deletar(transacao.codigo).then((mensagem) {
+        TransacaoController()
+            .deletar(context, transacao.codigo)
+            .then((mensagem) {
           Utils.message(context, mensagem);
           _atualizarTela();
         });
@@ -277,51 +293,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _atualizarTela() async {
-    TransacaoController().retornarTransacoes(context).then((lista) {
+    TransacaoController()
+        .retornarTransacoes(context, mesSelecionado, anoSelecionado)
+        .then((lista) async {
       listaTransacoes = lista;
-      resumoDto = _retornarResumo();
+      resumoDto = await _retornarResumo();
       setState(() {});
     });
     return;
   }
 
-  ResumoDTO _retornarResumo() {
-    final totalDespesasMes = listaTransacoes.fold(0.0, (acc, transacao) {
-      bool transacaoEhDoMesAnoSelecionado =
-          transacao.getMes() == mesSelecionado &&
-              transacao.getAno() == anoSelecionado;
+  Future<ResumoDTO> _retornarResumo() async {
+    SaldoDTO saldoDto = await TransacaoController().retornarSaldo(context);
 
-      if (transacao.tipo == TipoTransacaoEnum.Despesa &&
-          transacaoEhDoMesAnoSelecionado) {
-        return acc + transacao.valor;
-      }
+    double totalDespesasMes = 0;
+    double totalReceitasMes = 0;
 
-      return acc;
-    });
+    Set<TransacaoDTO> setListaTransacoes = Set.from(listaTransacoes);
 
-    final totalReceitasMes = listaTransacoes.fold(0.0, (acc, transacao) {
-      bool transacaoEhDoMesAnoSelecionado =
-          transacao.getMes() == mesSelecionado &&
-              transacao.getAno() == anoSelecionado;
-
-      if (transacao.tipo == TipoTransacaoEnum.Receita &&
-          transacaoEhDoMesAnoSelecionado) {
-        return acc + transacao.valor;
-      }
-
-      return acc;
-    });
-
-    double saldoEmConta = listaTransacoes.fold(0.0, (acc, transacao) {
+    setListaTransacoes.forEach((TransacaoDTO transacao) {
       if (transacao.ehReceita()) {
-        return acc + transacao.valor;
+        totalReceitasMes += transacao.valor;
+      } else {
+        totalDespesasMes += transacao.valor;
       }
-
-      return acc - transacao.valor;
     });
 
     return ResumoDTO(
-      saldoEmConta: saldoEmConta,
+      saldoEmConta: saldoDto.saldoTotal,
       totalDespesasMes: totalDespesasMes,
       totalReceitasMes: totalReceitasMes,
       mesSelecionado: mesSelecionado,
