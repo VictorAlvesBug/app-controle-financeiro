@@ -48,4 +48,35 @@ Obs: lembre-se que, para rodar o aplicativo, é necessário estar com a
 
 ## Telas principais
 
-...
+Inicialmente é exibida uma Splash Screen, enquanto o aplicativo identifica se o usuário está logado ou não:
+
+<img width="240" alt="Print01_SplashScreen" src="PrintsReadme/Print01_SplashScreen.jpeg" />
+
+Em seguida, caso o usuário não esteja logado, ele pode criar uma conta ou entrar com uma conta já existente:
+
+<img width="240" alt="Print02_RegisterScreen" src="PrintsReadme/Print02_RegisterScreen.jpeg" /> <img width="240" alt="Print03_LoginScreen" src="PrintsReadme/Print03_LoginScreen.jpeg" />
+
+Após entrar, a tela principal é exibida, permitindo cadastro de receitas e despesas:
+
+<img width="240" alt="Print04_HomeScreenSucessoLogin" src="PrintsReadme/Print04_HomeScreenSucessoLogin.jpeg" /> <img width="240" alt="Print05_HomeScreenFabAberto" src="PrintsReadme/Print05_HomeScreenFabAberto.jpeg" /> <img width="240" alt="Print06_HomeScreenReceitaSalario" src="PrintsReadme/Print06_HomeScreenReceitaSalario.jpeg" /> <img width="240" alt="Print07_HomeScreenDespesaContaAgua" src="PrintsReadme/Print07_HomeScreenDespesaContaAgua.jpeg" />
+
+A lista de transações cadastradas em determinado mês é exibida desta forma, sendo ordenada de forma decrescente e agrupando as transações de um mesmo dia:
+
+<img width="240" alt="Print08_HomeScreenMesAtual" src="PrintsReadme/Print08_HomeScreenMesAtual.jpeg" />
+
+Utilizando as setas ao lado da informação do mês atual "Novembro/2022" podemos visualizar transações de outros meses:
+
+<img width="240" alt="Print09_HomeScreenMesSeguinte" src="PrintsReadme/Print09_HomeScreenMesSeguinte.jpeg" />
+
+Para voltar ao mês atual, basta clicar no ícone de calendário que é exibido no canto superior esquerdo da tela.
+Cricando em uma transação, você pode editar suas informações, conforme print abaixo:
+
+<img width="240" alt="Print10_HomeScreenAlterarReceita" src="PrintsReadme/Print10_HomeScreenAlterarReceita.jpeg" />
+
+Mantendo pressionada uma transação ou clicando no ícone de excluir, a transação será desativada, após confirmação da ação:
+
+<img width="240" alt="Print11_HomeScreenExcluirDespesa" src="PrintsReadme/Print11_HomeScreenExcluirDespesa.jpeg" />
+
+Caso queira sair da sua conta, clique no ícone de logout no canto superior direito da tela:
+
+<img width="240" alt="Print12_HomeScreenConfirmacaoLogout" src="PrintsReadme/Print12_HomeScreenConfirmacaoLogout.jpeg" />
