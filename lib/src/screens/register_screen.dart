@@ -183,11 +183,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ? null
                         : _registrar,
                         child: _loadingNotifier.value
-                            ? ButtonLoading()
+                            ? const ButtonLoading()
                             : const Text('Cadastrar'),
                       ),
                     ),
-                    LabeledDivider(text: 'ou', verticalPadding: 10),
+                    const LabeledDivider(text: 'ou', verticalPadding: 10),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacementNamed(
@@ -275,9 +275,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _registrar() async {
+    _loadingNotifier.value = true;
     bool valido = _formKey.currentState?.validate() ?? false;
 
     if (!valido) {
+      _loadingNotifier.value = false;
       return;
     }
 
@@ -297,6 +299,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         }
       Utils.message(context, registerResponse['mensagem']);
+      _loadingNotifier.value = false;
       return;
     }
 
@@ -305,10 +308,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (!loginResponse['sucesso']) {
       Utils.message(context, loginResponse['mensagem']);
+      _loadingNotifier.value = false;
       return;
     }
 
     Utils.message(context, loginResponse['mensagem']);
     Navigator.pushReplacementNamed(context, HomeScreen.id);
+
+    _loadingNotifier.value = false;
   }
 }

@@ -35,7 +35,8 @@ Execute no cmd o seguinte comando e utilize o IP de wifi retornado na constante 
 Na barra superior do Android Studio, selecione o dispositivo que deseja utilizar e depois clique no
 ícone Run "main.dart".
 
-Obs.: Recomendamos que conecte um celular android no computador e utilize-o para rodar o aplicativo.
+Obs.: Recomendamos que conecte um celular android via cabo USB ao computador e utilize-o para rodar
+o aplicativo. Não é necessário manter o celular conectado via cabo após o carregamento do aplicativo.
 
 Para utilizar o aplicativo sem a necessidade de criar uma conta, utilize o seguinte login:
 
@@ -47,18 +48,4 @@ Obs: lembre-se que, para rodar o aplicativo, é necessário estar com a
 
 ## Telas principais
 
-/*
-splash,
-register preenchido,
-login preenchido,
-lista de transações do mês,
-fab aberto,
-modal cadastro despesa preenchido,
-modal cadastro receita preenchido,
-modal editar despesa,
-modal editar receita,
-modal deletar despesa,
-modal deletar receita,
-modal confirmacao logout,
-lista de transações do mês anterior
-*/
+...

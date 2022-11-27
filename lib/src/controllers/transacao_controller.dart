@@ -79,7 +79,7 @@ class TransacaoController {
                         MyTextField(
                           validator: _validadorDescricao,
                           onChanged: (value) {
-                            descricao = value;
+                            descricao = value.trim();
                           },
                           labelText: "Descrição",
                           iconData: Icons.message,
@@ -196,7 +196,7 @@ class TransacaoController {
                         MyTextField(
                           validator: _validadorDescricao,
                           onChanged: (value) {
-                            descricao = value;
+                            descricao = value.trim();
                           },
                           labelText: "Descrição",
                           iconData: Icons.message,
@@ -337,8 +337,8 @@ class TransacaoController {
     try {
       return await ApiService.listar(mes, ano);
     } catch (error) {
-      //Utils.message(context, "Ocorreu um erro ao retornar as transações");
-      Utils.message(context, error.toString());
+      Utils.message(context, "Ocorreu um erro ao retornar as transações");
+      //Utils.message(context, error.toString());
       print(error);
       return [];
     }
@@ -357,7 +357,8 @@ class TransacaoController {
     try {
       return await ApiService.retornarSaldo();
     } catch (error) {
-      Utils.message(context, "Ocorreu um erro ao retornar saldo");
+      //Utils.message(context, "Ocorreu um erro ao retornar saldo");
+      Utils.message(context, error.toString());
       print(error);
       return SaldoDTO();
     }
