@@ -20,6 +20,10 @@ class ResumoBox extends StatefulWidget {
 }
 
 class _ResumoBoxState extends State<ResumoBox> {
+  int mesExibindo = int.parse(DateFormat('M', "pt_BR").format(DateTime.now()));
+  int anoExibindo =
+      int.parse(DateFormat('yyyy', "pt_BR").format(DateTime.now()));
+
   @override
   Widget build(BuildContext context) {
     final dataAtual = DateTime.now();
@@ -28,6 +32,11 @@ class _ResumoBoxState extends State<ResumoBox> {
     final anoAtual = DateFormat('yyyy', "pt_BR").format(dataAtual);
     final mesAnoAtualFormatado = '$strMesAtual/$anoAtual';
 
+    bool ehMesAtual = mesExibindo ==
+            int.parse(DateFormat('M', "pt_BR").format(DateTime.now())) &&
+        anoExibindo ==
+            int.parse(DateFormat('yyyy', "pt_BR").format(DateTime.now()));
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -35,179 +44,206 @@ class _ResumoBoxState extends State<ResumoBox> {
         borderRadius: BorderRadius.circular(5),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        padding: const EdgeInsets.all(5),
+        child: Stack(
           children: [
-            const SizedBox(height: 5),
-            Center(
-              child: InkWell(
-                child: const Icon(
-                  Icons.calendar_today,
-                  color: Colors.orange,
-                  size: 20,
-                ),
-                onTap: () async {
-                  var mesAnoAtual = widget.resumoDto.retornarMesAnoAtual();
-                  var mes = mesAnoAtual[0];
-                  var ano = mesAnoAtual[1];
-                  widget.callbackAtualizacaoCascata(mes, ano);
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                    onTap: () {
-                      var mesAnoAnterior =
-                          widget.resumoDto.retornarMesAnoAnterior();
-                      var mes = mesAnoAnterior[0];
-                      var ano = mesAnoAnterior[1];
-                      widget.callbackAtualizacaoCascata(mes, ano);
-                    },
-                    child: const Icon(Icons.keyboard_arrow_left,
-                        color: Colors.white70, size: 28)),
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget.resumoDto.getMesAnoFormatado(),
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      fontWeight: mesAnoAtualFormatado ==
-                              widget.resumoDto.getMesAnoFormatado()
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+            ehMesAtual
+                ? SizedBox()
+                : Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Center(
+                      child: InkWell(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: const Icon(
+                            Icons.calendar_today,
+                            color: Colors.white70,
+                            size: 20,
+                          ),
+                        ),
+                        onTap: () async {
+                          var mesAnoAtual =
+                              widget.resumoDto.retornarMesAnoAtual();
+                          mesExibindo = mesAnoAtual[0];
+                          anoExibindo = mesAnoAtual[1];
+                          widget.callbackAtualizacaoCascata(
+                              mesExibindo, anoExibindo);
+                        },
+                      ),
                     ),
                   ),
-                ),
-                InkWell(
-                    onTap: () {
-                      var mesAnoAnterior =
-                          widget.resumoDto.retornarMesAnoPosterior();
-                      var mes = mesAnoAnterior[0];
-                      var ano = mesAnoAnterior[1];
-                      widget.callbackAtualizacaoCascata(mes, ano);
-                    },
-                    child: const Icon(Icons.keyboard_arrow_right,
-                        color: Colors.white70, size: 28)),
-              ],
-            ),
-            const SizedBox(height: 15),
-            const Text(
-              'Saldo em conta',
-              style: TextStyle(
-                color: Color(0xFFA3A3A3),
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 2),
-            MyCountUp(
-              begin: 0,
-              end: widget.resumoDto.saldoEmConta,
-              duration: const Duration(seconds: 1),
-              prefix: 'R\$',
-              separator: '.',
-              decimalSeparator: ',',
-              precision: 2,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 24,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    InkWell(
+                        onTap: () {
+                          var mesAnoAnterior =
+                              widget.resumoDto.retornarMesAnoAnterior();
+                          mesExibindo = mesAnoAnterior[0];
+                          anoExibindo = mesAnoAnterior[1];
+                          widget.callbackAtualizacaoCascata(
+                              mesExibindo, anoExibindo);
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: const Icon(Icons.keyboard_arrow_left,
+                              color: Colors.white70, size: 32),
+                        )),
                     Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(Icons.arrow_upward, color: Colors.white70),
-                    ),
-                    const SizedBox(width: 10),
-                    SizedBox(
-                      width: 110,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Receitas',
-                            style: TextStyle(
-                              color: Color(0xFFA3A3A3),
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          MyCountUp(
-                            begin: 0,
-                            end: widget.resumoDto.totalReceitasMes,
-                            duration: const Duration(seconds: 1),
-                            prefix: 'R\$',
-                            separator: '.',
-                            decimalSeparator: ',',
-                            precision: 2,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
+                      width: 160,
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.resumoDto.getMesAnoFormatado(),
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontWeight: mesAnoAtualFormatado ==
+                                  widget.resumoDto.getMesAnoFormatado()
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
+                    InkWell(
+                        onTap: () {
+                          var mesAnoAnterior =
+                              widget.resumoDto.retornarMesAnoPosterior();
+                          mesExibindo = mesAnoAnterior[0];
+                          anoExibindo = mesAnoAnterior[1];
+                          widget.callbackAtualizacaoCascata(
+                              mesExibindo, anoExibindo);
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: const Icon(Icons.keyboard_arrow_right,
+                              color: Colors.white70, size: 32),
+                        )),
                   ],
                 ),
+                const SizedBox(height: 15),
+                const Text(
+                  'Saldo em conta',
+                  style: TextStyle(
+                    color: Color(0xFFA3A3A3),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                MyCountUp(
+                  begin: 0,
+                  end: widget.resumoDto.saldoEmConta,
+                  duration: const Duration(seconds: 1),
+                  prefix: 'R\$',
+                  separator: '.',
+                  decimalSeparator: ',',
+                  precision: 2,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 24,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(Icons.arrow_downward, color: Colors.white70),
+                    Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Icon(Icons.arrow_upward,
+                              color: Colors.white70),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 120,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Receitas',
+                                style: TextStyle(
+                                  color: Color(0xFFA3A3A3),
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              MyCountUp(
+                                begin: 0,
+                                end: widget.resumoDto.totalReceitasMes,
+                                duration: const Duration(seconds: 1),
+                                prefix: 'R\$',
+                                separator: '.',
+                                decimalSeparator: ',',
+                                precision: 2,
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    SizedBox(
-                      width: 110,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Despesas',
-                            style: TextStyle(
-                              color: Color(0xFFA3A3A3),
-                              fontSize: 14,
-                            ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          const SizedBox(height: 2),
-                          MyCountUp(
-                            begin: 0,
-                            end: widget.resumoDto.totalDespesasMes,
-                            duration: const Duration(seconds: 1),
-                            prefix: 'R\$',
-                            separator: '.',
-                            decimalSeparator: ',',
-                            precision: 2,
-                            style: const TextStyle(
-                              color: Colors.deepOrange,
-                              fontSize: 20,
-                            ),
+                          child: const Icon(Icons.arrow_downward,
+                              color: Colors.white70),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 120,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Despesas',
+                                style: TextStyle(
+                                  color: Color(0xFFA3A3A3),
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              MyCountUp(
+                                begin: 0,
+                                end: widget.resumoDto.totalDespesasMes,
+                                duration: const Duration(seconds: 1),
+                                prefix: 'R\$',
+                                separator: '.',
+                                decimalSeparator: ',',
+                                precision: 2,
+                                style: const TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
               ],
             ),
           ],

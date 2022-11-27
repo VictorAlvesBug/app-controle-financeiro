@@ -42,8 +42,6 @@ class TransacaoController {
                   constraints: const BoxConstraints(
                     minWidth: 250,
                     maxWidth: 350,
-                    minHeight: 250,
-                    maxHeight: 365,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
@@ -79,6 +77,7 @@ class TransacaoController {
                           keyboardType: TextInputType.number,
                         ),
                         MyTextField(
+                          enableInteractiveSelection: false,
                           labelText: "Data",
                           controller: dataTransacaoController,
                           iconData: Icons.calendar_today,
@@ -149,8 +148,6 @@ class TransacaoController {
                   constraints: const BoxConstraints(
                     minWidth: 250,
                     maxWidth: 350,
-                    minHeight: 250,
-                    maxHeight: 365,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
@@ -187,6 +184,7 @@ class TransacaoController {
                           initialValue: Utils.formatarValor(transacao.valor),
                         ),
                         MyTextField(
+                          enableInteractiveSelection: false,
                           labelText: "Data",
                           controller: dataTransacaoController,
                           iconData: Icons.calendar_today,
@@ -300,7 +298,8 @@ class TransacaoController {
     try {
       return await ApiService.listar(mes, ano);
     } catch (error) {
-      Utils.message(context, "Ocorreu um erro ao retornar as transações");
+      //Utils.message(context, "Ocorreu um erro ao retornar as transações");
+      Utils.message(context, error.toString());
       print(error);
       return [];
     }
@@ -318,7 +317,7 @@ class TransacaoController {
 
   Future<SaldoDTO> retornarSaldo(BuildContext context) async {
     try {
-      return await ApiService.retornarSaldo();
+      return await ApiService.retornarSaldo(context);
     } catch (error) {
       Utils.message(context, "Ocorreu um erro ao retornar saldo");
       print(error);

@@ -3,6 +3,7 @@ import 'package:controle_financeiro/src/screens/login_screen.dart';
 import 'package:controle_financeiro/src/screens/register_screen.dart';
 import 'package:controle_financeiro/src/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
@@ -10,6 +11,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MaterialApp(
       title: 'Controle Financeiro',
       localizationsDelegates: const [
@@ -18,7 +24,7 @@ class App extends StatelessWidget {
       ],
       supportedLocales: const [Locale('pt', 'BR')],
       theme: ThemeData(
-        primaryColor: Colors.indigo,
+        primaryColor: Colors.indigoAccent,
         primaryColorLight: Colors.orange,
         primaryColorDark: Colors.black12,
         primarySwatch: Colors.indigo,

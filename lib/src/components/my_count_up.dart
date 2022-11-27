@@ -143,6 +143,13 @@ class _MyCountUpAnimatedText extends AnimatedWidget {
   @override
   Widget build(BuildContext context) {
     String mainValue = animation.value.toStringAsFixed(precision);
+    String prefixo = prefix ?? '';
+
+    if(animation.value < 0)
+      {
+        mainValue = (-animation.value).toStringAsFixed(precision);
+        prefixo = '-${prefix ?? ''}';
+      }
 
     if(separator != null){
       mainValue = mainValue
@@ -150,7 +157,7 @@ class _MyCountUpAnimatedText extends AnimatedWidget {
           .replaceAllMapped(reg, (Match match) => '${match[1]}$separator');
     }
 
-    String strText = '$prefix$mainValue$suffix';
+    String strText = '$prefixo$mainValue$suffix';
 
     return Text(
       strText,

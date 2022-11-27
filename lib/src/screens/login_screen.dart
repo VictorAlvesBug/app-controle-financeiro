@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String senha = value ?? "";
 
     if (senha.length < 8) {
-      return "A senha deve ter ao menos 8 caracteres";
+      return "Utilize ao menos 8 caracteres";
     }
 
     RegExp regexContemNumero = RegExp(r"\d");
@@ -132,15 +132,15 @@ class _LoginScreenState extends State<LoginScreen> {
     RegExp regexContemLetraMaiuscula = RegExp(r"[A-Z]");
 
     if (regexContemNumero.allMatches(senha).isEmpty) {
-      return "A senha deve conter ao menos um caracter numérico";
+      return "Utilize ao menos um caracter numérico";
     }
 
     if (regexContemLetraMinuscula.allMatches(senha).isEmpty) {
-      return "A senha deve conter ao menos uma letra minúscula";
+      return "Utilize ao menos uma letra minúscula";
     }
 
     if (regexContemLetraMaiuscula.allMatches(senha).isEmpty) {
-      return "A senha deve conter ao menos uma letra maiúscula";
+      return "Utilize ao menos uma letra maiúscula";
     }
 
     return null;

@@ -6,6 +6,7 @@ class MyTextField extends StatelessWidget {
   MyTextField({
     Key? key,
     required this.labelText,
+    this.enableInteractiveSelection = true,
     this.obscureText = false,
     this.validator,
     this.onChanged,
@@ -18,6 +19,7 @@ class MyTextField extends StatelessWidget {
     this.valido = false,
   }) : super(key: key);
 
+  bool enableInteractiveSelection;
   bool obscureText;
   final String? Function(String?)? validator;
   final String labelText;
@@ -39,6 +41,7 @@ class MyTextField extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: [
           TextFormField(
+            enableInteractiveSelection: enableInteractiveSelection,
             obscureText: obscureText,
             validator: validator,
             decoration: InputDecoration(
@@ -50,7 +53,7 @@ class MyTextField extends StatelessWidget {
               ),
               focusColor: Colors.white70,
               icon: iconData == null ? null : Icon(iconData),
-              errorStyle: const TextStyle(fontWeight: FontWeight.bold),
+              errorStyle: const TextStyle(color: Colors.deepOrange),
             ),
             onChanged: onChanged,
             style: const TextStyle(color: Colors.white70),

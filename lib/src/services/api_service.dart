@@ -4,15 +4,16 @@ import 'dart:io';
 import 'package:controle_financeiro/src/dto/transacao_dto.dart';
 import 'package:controle_financeiro/src/services/login_service.dart';
 import 'package:controle_financeiro/src/utils/utils.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../dto/saldo_dto.dart';
 import '../enums/tipo_transacao_enum.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const _apiUrl = 'http://localhost:3000/api';
+  static const _apiUrl = 'http://192.168.15.138:3000/api';
 
-  static Future<SaldoDTO> retornarSaldo() async {
+  static Future<SaldoDTO> retornarSaldo(BuildContext context) async {
     final userId = await LoginService().retornarUserId();
     final uri =
         Uri.parse('$_apiUrl/saldo?userId=$userId');
@@ -23,9 +24,9 @@ class ApiService {
     final responseJson = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      double totalReceitas = responseJson['dados']['totalReceitas'];
-      double totalDespesas = responseJson['dados']['totalDespesas'];
-      double saldoTotal = responseJson['dados']['saldoTotal'];
+      double totalReceitas = double.parse(responseJson['dados']['totalReceitas'].toString());
+      double totalDespesas = double.parse(responseJson['dados']['totalDespesas'].toString());
+      double saldoTotal = double.parse(responseJson['dados']['saldoTotal'].toString());
 
       SaldoDTO saldoDto = SaldoDTO(
         totalReceitas: totalReceitas,
@@ -57,7 +58,7 @@ class ApiService {
                 tipo: transacaoJson['tipo'] == 'R'
                     ? TipoTransacaoEnum.Receita
                     : TipoTransacaoEnum.Despesa,
-                valor: transacaoJson['valor'],
+                valor: double.parse(transacaoJson['valor'].toString()),
                 data: DateTime.parse(transacaoJson['dataTransacao']),
                 descricao: transacaoJson['nome'],
                 dataHoraCadastro:
@@ -88,7 +89,7 @@ class ApiService {
                 tipo: transacaoJson['tipo'] == 'R'
                     ? TipoTransacaoEnum.Receita
                     : TipoTransacaoEnum.Despesa,
-                valor: transacaoJson['valor'],
+                valor: double.parse(transacaoJson['valor'].toString()),
                 data: DateTime.parse(transacaoJson['dataTransacao']),
                 descricao: transacaoJson['nome'],
                 dataHoraCadastro:

@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _nomeUsuarioNotifier = ValueNotifier<String>("");
   final _loadingNotifier = ValueNotifier<bool>(true);
-  final _exibicaoFabNotifier = ValueNotifier<bool>(true);
+  final _exibicaoFabNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -67,6 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    _nomeUsuarioNotifier.dispose();
+    _loadingNotifier.dispose();
     _exibicaoFabNotifier.dispose();
     super.dispose();
   }
@@ -87,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Widget loadingWidget = const Center(
       child: SizedBox(
-        width: 30,
-        height: 30,
-        child: CircularProgressIndicator(color: Colors.indigo),
+        width: 40,
+        height: 40,
+        child: CircularProgressIndicator(color: Colors.indigoAccent),
       ),
     );
 
@@ -139,31 +141,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color(0xFF444444),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ValueListenableBuilder(
-                            valueListenable: _nomeUsuarioNotifier,
-                            builder: (_, nomeUsuario, __) => Text(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable: _nomeUsuarioNotifier,
+                          builder: (_, nomeUsuario, __) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
                               'Olá, $nomeUsuario',
                               style: const TextStyle(
                                   color: Colors.white70, fontSize: 16),
                             ),
                           ),
-                          InkWell(
+                        ),
+                        InkWell(
+                          child: Container(
+                            width: 40,
+                            height: 40,
                             child:
                                 const Icon(Icons.logout, color: Colors.white70),
-                            onTap: () async {
-                              await LoginService().logout();
-                              Navigator.pushReplacementNamed(
-                                  context, LoginScreen.id);
-                            },
                           ),
-                        ],
-                      ),
+                          onTap: () async {
+                            await LoginService().logout();
+                            Navigator.pushReplacementNamed(
+                                context, LoginScreen.id);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -174,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       resumoDto: resumoDto,
                       callbackAtualizacaoCascata: (int mes, int ano) {
                         _loadingNotifier.value = true;
+                        _exibicaoFabNotifier.value = false;
                         mesSelecionado = mes;
                         anoSelecionado = ano;
                         _atualizarTela();
@@ -195,6 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           : (listaTransacoesDia.isEmpty
                               ? listaVaziaWidget
                               : ListView.separated(
+                                  physics: AlwaysScrollableScrollPhysics(),
                                   scrollDirection: Axis.vertical,
                                   itemBuilder: (_, indiceTransacoesDia) {
                                     final transacoesDia =
@@ -212,6 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 fontSize: 16)),
                                         const SizedBox(height: 5),
                                         ListView.separated(
+                                          physics: NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemBuilder: (_, indiceTransacao) {
                                             final transacao =
@@ -238,9 +246,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       color: Colors.white70),
                                                 ),
                                                 trailing: InkWell(
-                                                  child: const Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white70,
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white70,
+                                                    ),
                                                   ),
                                                   onTap: () =>
                                                       _modalExcluir(transacao),
@@ -367,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Utils.exibirModalConfirmacao(
       context: context,
       tituloModal: SimpleRichText("Excluir $strTipo",
-          style: const TextStyle(color: Colors.white70)),
+          style: const TextStyle(color: Colors.white70, fontSize: 20)),
       textoModal: SimpleRichText(
           'A $strTipo "*${transacao.descricao}*", de *$strValor*, será excluída.',
           style: const TextStyle(color: Colors.white70)),
@@ -395,6 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
       listaTransacoes = lista;
       resumoDto = await _retornarResumo();
       _loadingNotifier.value = false;
+      _exibicaoFabNotifier.value = true;
       setState(
           () {}); //Neste caso é necessário, pois o build precisa ser executado novamente para renderizar toda a tela
     });

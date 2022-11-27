@@ -17,30 +17,42 @@ class Utils {
     String textoBotaoNao = "Não",
   }) {
 
-    Widget botaoSim = ElevatedButton(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoSim, style: const TextStyle(color: Colors.white70)),
+    Widget botaoSim =
+    Expanded(
+      flex: 1,
+      child: ElevatedButton(
+        onPressed: () {
+          if(callbackSim != null){
+            callbackSim();
+          }
+          Navigator.of(context).pop();
+        },
+        child: SizedBox(
+          height: 30,
+          child: Center(
+            child: Text(textoBotaoSim, style: TextStyle(color: Colors.white70)),
+          ),
+        ),
       ),
-      onPressed: () {
-        if(callbackSim != null){
-          callbackSim();
-        }
-        Navigator.of(context).pop();
-      },
     );
 
-    Widget botaoNao = ElevatedButton(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(textoBotaoNao, style: const TextStyle(color: Colors.white70)),
+    Widget botaoNao =
+    Expanded(
+      flex: 1,
+      child: ElevatedButton(
+        onPressed: () {
+          if(callbackNao != null){
+            callbackNao();
+          }
+          Navigator.of(context).pop();
+        },
+        child: SizedBox(
+          height: 30,
+          child: Center(
+            child: Text(textoBotaoNao, style: TextStyle(color: Colors.white70)),
+          ),
+        ),
       ),
-      onPressed: () {
-        if(callbackNao != null){
-          callbackNao();
-        }
-        Navigator.of(context).pop();
-      },
     );
 
     AlertDialog alert = AlertDialog(
@@ -48,8 +60,14 @@ class Utils {
       title: tituloModal,
       content: textoModal,
       actions: [
-        botaoSim,
-        botaoNao,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            botaoSim,
+            SizedBox(width: 5),
+            botaoNao,
+          ],
+        )
       ],
     );
 
