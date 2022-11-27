@@ -1,6 +1,7 @@
 import 'package:controle_financeiro/src/components/app_logo.dart';
 import 'package:controle_financeiro/src/components/labeled_divider.dart';
 import 'package:controle_financeiro/src/components/my_text_field.dart';
+import 'package:controle_financeiro/src/dto/user_dto.dart';
 import 'package:controle_financeiro/src/screens/home_screen.dart';
 import 'package:controle_financeiro/src/services/login_service.dart';
 import 'package:controle_financeiro/src/services/register_service.dart';
@@ -19,7 +20,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final _formKey = GlobalKey<FormState>();
 
   final _nomeNotifier = ValueNotifier<String>('');
@@ -27,6 +27,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _senhaNotifier = ValueNotifier<String>('');
   final _confirmacaoSenhaNotifier = ValueNotifier<String>('');
   final _exibirSenhaNotifier = ValueNotifier<bool>(false);
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    RouteSettings settings = ModalRoute.of(context)!.settings;
+    if (settings.arguments != null) {
+      UserDTO userDTO = settings.arguments as UserDTO;
+
+      _emailController.value = TextEditingValue(
+          text: userDTO.email, selection: _emailController.selection);
+      _emailNotifier.value = userDTO.email;
+
+      _senhaController.value = TextEditingValue(
+          text: userDTO.senha, selection: _senhaController.selection);
+      _senhaNotifier.value = userDTO.senha;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
@@ -66,6 +86,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         iconData: Icons.people_rounded,
                         valido: _validadorNome(nome) == null,
+                        textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.next,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -75,10 +97,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         validator: _validadorEmail,
                         labelText: 'E-mail',
                         onChanged: (value) {
+                          _emailController.value = TextEditingValue(
+                              text: value.toLowerCase().trim(),
+                              selection: _emailController.selection);
+
                           _emailNotifier.value = value.toLowerCase().trim();
                         },
                         iconData: Icons.alternate_email_outlined,
                         valido: _validadorEmail(email) == null,
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -91,10 +119,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           obscureText: !exibirSenha,
                           labelText: 'Senha',
                           onChanged: (value) {
+                            _senhaController.value = TextEditingValue(
+                                text: value,
+                                selection: _senhaController.selection);
+
                             _senhaNotifier.value = value;
                           },
                           iconData: Icons.lock_outline,
                           valido: _validadorSenha(senha) == null,
+                          controller: _senhaController,
+                          textInputAction: TextInputAction.next,
                         ),
                       ),
                     ),
@@ -103,7 +137,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       valueListenable: _senhaNotifier,
                       builder: (_, senha, __) => ValueListenableBuilder(
                         valueListenable: _confirmacaoSenhaNotifier,
-                        builder: (_, confirmacaoSenha, __) => ValueListenableBuilder(
+                        builder: (_, confirmacaoSenha, __) =>
+                            ValueListenableBuilder(
                           valueListenable: _exibirSenhaNotifier,
                           builder: (_, exibirSenha, __) => MyTextField(
                             validator: _validadorConfirmacaoSenha,
@@ -113,10 +148,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _confirmacaoSenhaNotifier.value = value;
                             },
                             iconData: Icons.lock_outline,
-                            valido: _validadorSenha(senha) == null
-                                && _validadorConfirmacaoSenha(
-                                    confirmacaoSenha) ==
-                                null,
+                            valido: _validadorSenha(senha) == null &&
+                                _validadorConfirmacaoSenha(confirmacaoSenha) ==
+                                    null,
+                            onFieldSubmitted: (_) => _registrar(),
+                            textInputAction: TextInputAction.done,
                           ),
                         ),
                       ),
@@ -143,7 +179,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     LabeledDivider(text: 'ou', verticalPadding: 10),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, LoginScreen.id);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          LoginScreen.id,
+                          arguments: UserDTO(
+                            email: _emailNotifier.value,
+                            senha: _senhaNotifier.value,
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF444444),
@@ -227,15 +270,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    dynamic registerResponse =
-        await RegisterService().register(_nomeNotifier.value, _emailNotifier.value, _senhaNotifier.value);
+    dynamic registerResponse = await RegisterService().register(
+        _nomeNotifier.value, _emailNotifier.value, _senhaNotifier.value);
 
     if (!registerResponse['sucesso']) {
+      if(registerResponse['alterarParaLoginScreen'])
+        {
+          Navigator.pushReplacementNamed(
+            context,
+            LoginScreen.id,
+            arguments: UserDTO(
+              email: _emailNotifier.value,
+              senha: _senhaNotifier.value,
+            ),
+          );
+        }
       Utils.message(context, registerResponse['mensagem']);
       return;
     }
 
-    dynamic loginResponse = await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
+    dynamic loginResponse =
+        await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
 
     if (!loginResponse['sucesso']) {
       Utils.message(context, loginResponse['mensagem']);

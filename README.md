@@ -29,8 +29,13 @@ flutter upgrade
 flutter pub get
 ```
 
+Execute no cmd o seguinte comando e utilize o IP de wifi retornado na constante "_wifiIp" do arquivo
+"lib/src/services/api_service.dart"
+
 Na barra superior do Android Studio, selecione o dispositivo que deseja utilizar e depois clique no
 ícone Run "main.dart".
+
+Obs.: Recomendamos que conecte um celular android no computador e utilize-o para rodar o aplicativo.
 
 Para utilizar o aplicativo sem a necessidade de criar uma conta, utilize o seguinte login:
 
@@ -39,3 +44,21 @@ Para utilizar o aplicativo sem a necessidade de criar uma conta, utilize o segui
 
 Obs: lembre-se que, para rodar o aplicativo, é necessário estar com a
 [API](https://github.com/VictorAlvesBug/app-controle-financeiro) rodando também.
+
+## Telas principais
+
+/*
+splash,
+register preenchido,
+login preenchido,
+lista de transações do mês,
+fab aberto,
+modal cadastro despesa preenchido,
+modal cadastro receita preenchido,
+modal editar despesa,
+modal editar receita,
+modal deletar despesa,
+modal deletar receita,
+modal confirmacao logout,
+lista de transações do mês anterior
+*/

@@ -59,24 +59,6 @@ class TransacaoController {
                         ),
                         const SizedBox(height: 20),
                         MyTextField(
-                          validator: _validadorDescricao,
-                          onChanged: (value) {
-                            descricao = value;
-                          },
-                          labelText: "Descrição",
-                          iconData: Icons.message,
-                        ),
-                        MyTextField(
-                          validator: _validadorValor,
-                          onChanged: (value) {
-                            valor = Utils.retornarValor(value);
-                          },
-                          labelText: "Valor",
-                          iconData: Icons.monetization_on_outlined,
-                          inputFormatters: [formatadorDinheiro],
-                          keyboardType: TextInputType.number,
-                        ),
-                        MyTextField(
                           enableInteractiveSelection: false,
                           labelText: "Data",
                           controller: dataTransacaoController,
@@ -87,6 +69,28 @@ class TransacaoController {
                           onChanged: (value) async {
                             await _abrirDatePicker(context);
                           },
+                        ),
+                        MyTextField(
+                          validator: _validadorDescricao,
+                          onChanged: (value) {
+                            descricao = value;
+                          },
+                          labelText: "Descrição",
+                          iconData: Icons.message,
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        MyTextField(
+                          validator: _validadorValor,
+                          onChanged: (value) {
+                            valor = Utils.retornarValor(value);
+                          },
+                          labelText: "Valor",
+                          iconData: Icons.monetization_on_outlined,
+                          inputFormatters: [formatadorDinheiro],
+                          keyboardType: TextInputType.number,
+                          onFieldSubmitted: (_) => _cadastrarTransacao(context),
+                          textInputAction: TextInputAction.done,
                         ),
                         const SizedBox(height: 40),
                         ElevatedButton(
@@ -164,6 +168,18 @@ class TransacaoController {
                         ),
                         const SizedBox(height: 20),
                         MyTextField(
+                          enableInteractiveSelection: false,
+                          labelText: "Data",
+                          controller: dataTransacaoController,
+                          iconData: Icons.calendar_today,
+                          onTap: () async {
+                            await _abrirDatePicker(context);
+                          },
+                          onChanged: (value) async {
+                            await _abrirDatePicker(context);
+                          },
+                        ),
+                        MyTextField(
                           validator: _validadorDescricao,
                           onChanged: (value) {
                             descricao = value;
@@ -171,6 +187,8 @@ class TransacaoController {
                           labelText: "Descrição",
                           iconData: Icons.message,
                           initialValue: transacao.descricao,
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.next,
                         ),
                         MyTextField(
                           validator: _validadorValor,
@@ -182,18 +200,8 @@ class TransacaoController {
                           inputFormatters: [_formatadorDinheiro],
                           keyboardType: TextInputType.number,
                           initialValue: Utils.formatarValor(transacao.valor),
-                        ),
-                        MyTextField(
-                          enableInteractiveSelection: false,
-                          labelText: "Data",
-                          controller: dataTransacaoController,
-                          iconData: Icons.calendar_today,
-                          onTap: () async {
-                            await _abrirDatePicker(context);
-                          },
-                          onChanged: (value) async {
-                            await _abrirDatePicker(context);
-                          },
+                          onFieldSubmitted: (_) => _editarTransacao(context),
+                          textInputAction: TextInputAction.done,
                         ),
                         const SizedBox(height: 40),
                         ElevatedButton(
@@ -317,7 +325,7 @@ class TransacaoController {
 
   Future<SaldoDTO> retornarSaldo(BuildContext context) async {
     try {
-      return await ApiService.retornarSaldo(context);
+      return await ApiService.retornarSaldo();
     } catch (error) {
       Utils.message(context, "Ocorreu um erro ao retornar saldo");
       print(error);

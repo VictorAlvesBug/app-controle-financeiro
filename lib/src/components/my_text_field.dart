@@ -6,6 +6,7 @@ class MyTextField extends StatelessWidget {
   MyTextField({
     Key? key,
     required this.labelText,
+    this.textCapitalization = TextCapitalization.none,
     this.enableInteractiveSelection = true,
     this.obscureText = false,
     this.validator,
@@ -16,9 +17,12 @@ class MyTextField extends StatelessWidget {
     this.inputFormatters,
     this.keyboardType,
     this.initialValue,
+    this.onFieldSubmitted,
+    this.textInputAction,
     this.valido = false,
   }) : super(key: key);
 
+  TextCapitalization textCapitalization;
   bool enableInteractiveSelection;
   bool obscureText;
   final String? Function(String?)? validator;
@@ -30,6 +34,8 @@ class MyTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final String? initialValue;
+  final Function(String)? onFieldSubmitted;
+  final TextInputAction? textInputAction;
 
   bool valido;
 
@@ -41,6 +47,7 @@ class MyTextField extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: [
           TextFormField(
+            textCapitalization: textCapitalization,
             enableInteractiveSelection: enableInteractiveSelection,
             obscureText: obscureText,
             validator: validator,
@@ -62,10 +69,14 @@ class MyTextField extends StatelessWidget {
             inputFormatters: inputFormatters,
             keyboardType: keyboardType,
             initialValue: initialValue,
+            onFieldSubmitted: onFieldSubmitted,
+            textInputAction: textInputAction,
           ),
           Positioned(
             right: 10,
-            child: valido ? const Icon(Icons.check, color: Colors.green) : const Text(""),
+            child: valido
+                ? const Icon(Icons.check, color: Colors.green)
+                : const Text(""),
           ),
         ],
       ),

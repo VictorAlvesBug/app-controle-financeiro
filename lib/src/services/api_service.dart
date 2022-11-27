@@ -11,12 +11,16 @@ import '../enums/tipo_transacao_enum.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const _apiUrl = 'http://192.168.15.138:3000/api';
 
-  static Future<SaldoDTO> retornarSaldo(BuildContext context) async {
+  // Abra o CMD > Execute "ipconfig" > Altere a constante abaixo para o IP de Wifi retornado.
+  static const _wifiIp = '192.168.15.138';
+
+  static const _apiUrl = 'http://$_wifiIp:3000/api';
+
+  static Future<SaldoDTO> retornarSaldo() async {
     final userId = await LoginService().retornarUserId();
     final uri =
-        Uri.parse('$_apiUrl/saldo?userId=$userId');
+    Uri.parse('$_apiUrl/saldo?userId=$userId');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
 
     http.Response response = await http.get(uri, headers: headers);
@@ -24,9 +28,12 @@ class ApiService {
     final responseJson = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      double totalReceitas = double.parse(responseJson['dados']['totalReceitas'].toString());
-      double totalDespesas = double.parse(responseJson['dados']['totalDespesas'].toString());
-      double saldoTotal = double.parse(responseJson['dados']['saldoTotal'].toString());
+      double totalReceitas = double.parse(
+          responseJson['dados']['totalReceitas'].toString());
+      double totalDespesas = double.parse(
+          responseJson['dados']['totalDespesas'].toString());
+      double saldoTotal = double.parse(
+          responseJson['dados']['saldoTotal'].toString());
 
       SaldoDTO saldoDto = SaldoDTO(
         totalReceitas: totalReceitas,
@@ -44,7 +51,7 @@ class ApiService {
   static Future<List<TransacaoDTO>> listar(int mes, int ano) async {
     final userId = await LoginService().retornarUserId();
     final uri =
-        Uri.parse('$_apiUrl/transacoes?userId=$userId&mes=$mes&ano=$ano');
+    Uri.parse('$_apiUrl/transacoes?userId=$userId&mes=$mes&ano=$ano');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
 
     http.Response response = await http.get(uri, headers: headers);
@@ -53,17 +60,18 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<TransacaoDTO> listaRetorno = responseJson['dados']
-          .map<TransacaoDTO>((transacaoJson) => TransacaoDTO(
-                codigo: transacaoJson['codigo'],
-                tipo: transacaoJson['tipo'] == 'R'
-                    ? TipoTransacaoEnum.Receita
-                    : TipoTransacaoEnum.Despesa,
-                valor: double.parse(transacaoJson['valor'].toString()),
-                data: DateTime.parse(transacaoJson['dataTransacao']),
-                descricao: transacaoJson['nome'],
-                dataHoraCadastro:
-                    DateTime.parse(transacaoJson['dataHoraCadastro']),
-              ))
+          .map<TransacaoDTO>((transacaoJson) =>
+          TransacaoDTO(
+            codigo: transacaoJson['codigo'],
+            tipo: transacaoJson['tipo'] == 'R'
+                ? TipoTransacaoEnum.Receita
+                : TipoTransacaoEnum.Despesa,
+            valor: double.parse(transacaoJson['valor'].toString()),
+            data: DateTime.parse(transacaoJson['dataTransacao']),
+            descricao: transacaoJson['nome'],
+            dataHoraCadastro:
+            DateTime.parse(transacaoJson['dataHoraCadastro']),
+          ))
           .toList();
 
       return listaRetorno;
@@ -84,17 +92,18 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<TransacaoDTO> listaRetorno = responseJson['dados']
-          .map<TransacaoDTO>((transacaoJson) => TransacaoDTO(
-                codigo: transacaoJson['codigo'],
-                tipo: transacaoJson['tipo'] == 'R'
-                    ? TipoTransacaoEnum.Receita
-                    : TipoTransacaoEnum.Despesa,
-                valor: double.parse(transacaoJson['valor'].toString()),
-                data: DateTime.parse(transacaoJson['dataTransacao']),
-                descricao: transacaoJson['nome'],
-                dataHoraCadastro:
-                    DateTime.parse(transacaoJson['dataHoraCadastro']),
-              ))
+          .map<TransacaoDTO>((transacaoJson) =>
+          TransacaoDTO(
+            codigo: transacaoJson['codigo'],
+            tipo: transacaoJson['tipo'] == 'R'
+                ? TipoTransacaoEnum.Receita
+                : TipoTransacaoEnum.Despesa,
+            valor: double.parse(transacaoJson['valor'].toString()),
+            data: DateTime.parse(transacaoJson['dataTransacao']),
+            descricao: transacaoJson['nome'],
+            dataHoraCadastro:
+            DateTime.parse(transacaoJson['dataHoraCadastro']),
+          ))
           .toList();
 
       return listaRetorno.elementAt(0);
@@ -117,7 +126,7 @@ class ApiService {
       });
 
       http.Response response =
-          await http.post(uri, headers: headers, body: body);
+      await http.post(uri, headers: headers, body: body);
 
       final responseJson = jsonDecode(response.body);
 
@@ -135,7 +144,7 @@ class ApiService {
     try {
       final userId = await LoginService().retornarUserId();
       final uri =
-          Uri.parse('$_apiUrl/transacoes/${transacao.codigo}?userId=$userId');
+      Uri.parse('$_apiUrl/transacoes/${transacao.codigo}?userId=$userId');
       final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
       final body = json.encode({
         "nome": transacao.descricao,
@@ -145,7 +154,7 @@ class ApiService {
       });
 
       http.Response response =
-          await http.patch(uri, headers: headers, body: body);
+      await http.patch(uri, headers: headers, body: body);
 
       final responseJson = jsonDecode(response.body);
 

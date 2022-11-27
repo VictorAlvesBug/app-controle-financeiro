@@ -1,6 +1,7 @@
 import 'package:controle_financeiro/src/components/app_logo.dart';
 import 'package:controle_financeiro/src/components/labeled_divider.dart';
 import 'package:controle_financeiro/src/components/my_text_field.dart';
+import 'package:controle_financeiro/src/dto/user_dto.dart';
 import 'package:controle_financeiro/src/screens/home_screen.dart';
 import 'package:controle_financeiro/src/screens/register_screen.dart';
 import 'package:controle_financeiro/src/services/login_service.dart';
@@ -22,6 +23,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailNotifier = ValueNotifier<String>('');
   final _senhaNotifier = ValueNotifier<String>('');
   final _exibirSenhaNotifier = ValueNotifier<bool>(false);
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    RouteSettings settings = ModalRoute.of(context)!.settings;
+    if (settings.arguments != null) {
+      UserDTO userDTO = settings.arguments as UserDTO;
+
+      _emailController.value = TextEditingValue(
+          text: userDTO.email,
+          selection: _emailController.selection
+      );
+      _emailNotifier.value = userDTO.email;
+
+      _senhaController.value = TextEditingValue(
+          text: userDTO.senha,
+          selection: _senhaController.selection
+      );
+      _senhaNotifier.value = userDTO.senha;
+
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: _validadorEmail,
                         labelText: 'E-mail',
                         onChanged: (value) {
+                          _emailController.value = TextEditingValue(
+                              text: value.toLowerCase().trim(),
+                              selection: _emailController.selection);
+
                           _emailNotifier.value = value.toLowerCase().trim();
                         },
                         iconData: Icons.alternate_email_outlined,
                         valido: _validadorEmail(email) == null,
+                        textCapitalization: TextCapitalization.characters,
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -63,10 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Senha',
                           obscureText: !exibirSenha,
                           onChanged: (value) {
+                            _senhaController.value = TextEditingValue(
+                                text: value,
+                                selection: _senhaController.selection
+                            );
+
                             _senhaNotifier.value = value;
                           },
                           iconData: Icons.lock_outline,
                           valido: _validadorSenha(senha) == null,
+                          controller: _senhaController,
+                          onFieldSubmitted: (_) => _logar(),
+                          textInputAction: TextInputAction.done,
                         ),
                       ),
                     ),
@@ -74,8 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ValueListenableBuilder(
                       valueListenable: _exibirSenhaNotifier,
                       builder: (_, exibirSenha, __) => CheckboxListTile(
-                        title: const Text('Exibir senha', style: TextStyle(color: Colors.white70)),
-                        controlAffinity: ListTileControlAffinity.leading, // ListTileControlAffinity.trailing
+                        title: const Text('Exibir senha',
+                            style: TextStyle(color: Colors.white70)),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        // ListTileControlAffinity.trailing
                         value: exibirSenha,
                         onChanged: (value) {
                           _exibirSenhaNotifier.value = value!;
@@ -90,11 +133,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     LabeledDivider(text: 'ou', verticalPadding: 10),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, RegisterScreen.id);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          RegisterScreen.id,
+                          arguments: UserDTO(
+                            email: _emailNotifier.value,
+                            senha: _senhaNotifier.value,
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF444444),
-                          side: BorderSide(color: Theme.of(context).primaryColorLight),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColorLight),
                           foregroundColor: Theme.of(context).primaryColorLight),
                       child: const Text('Criar conta'),
                     ),
@@ -108,10 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String? _validadorEmail(String? value){
+  String? _validadorEmail(String? value) {
     String email = (value ?? "").toLowerCase().trim();
-    RegExp regexEmail = RegExp(
-        r"^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.\w+$");
+    RegExp regexEmail = RegExp(r"^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.\w+$");
 
     if (regexEmail.allMatches(email).isEmpty) {
       return "Informe um e-mail válido";
@@ -120,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  String? _validadorSenha(String? value){
+  String? _validadorSenha(String? value) {
     String senha = value ?? "";
 
     if (senha.length < 8) {
@@ -149,19 +199,17 @@ class _LoginScreenState extends State<LoginScreen> {
   void _logar() async {
     bool valido = _formKey.currentState?.validate() ?? false;
 
-    if(!valido)
-      {
-        return;
-      }
-    dynamic loginResponse = await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
+    if (!valido) {
+      return;
+    }
+    dynamic loginResponse =
+        await LoginService().login(_emailNotifier.value, _senhaNotifier.value);
 
-    if(loginResponse['sucesso']){
+    if (loginResponse['sucesso']) {
       Utils.message(context, loginResponse['mensagem']);
       Navigator.pushReplacementNamed(context, HomeScreen.id);
-    }
-    else{
+    } else {
       Utils.message(context, loginResponse['mensagem']);
     }
-
   }
 }

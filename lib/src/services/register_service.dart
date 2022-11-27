@@ -22,6 +22,7 @@ class RegisterService {
       return {
         'sucesso': false,
         'mensagem': retornarMensagem(bodyJson['error']['message']),
+        'alterarParaLoginScreen': bodyJson['error']['message'] == 'EMAIL_EXISTS',
         'idToken': null
       };
     } else {
@@ -32,6 +33,7 @@ class RegisterService {
       return {
         'sucesso': true,
         'mensagem': 'Cadastro realizado com sucesso',
+        'alterarParaLoginScreen': false,
         'idToken': idToken
       };
     }

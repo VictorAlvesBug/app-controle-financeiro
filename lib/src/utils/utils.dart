@@ -15,6 +15,7 @@ class Utils {
     String textoBotaoSim = "Sim",
     void Function()? callbackNao,
     String textoBotaoNao = "Não",
+    bool ocultarBotaoNao = false,
   }) {
 
     Widget botaoSim =
@@ -30,7 +31,7 @@ class Utils {
         child: SizedBox(
           height: 30,
           child: Center(
-            child: Text(textoBotaoSim, style: TextStyle(color: Colors.white70)),
+            child: Text(textoBotaoSim, style: const TextStyle(color: Colors.white70)),
           ),
         ),
       ),
@@ -49,7 +50,7 @@ class Utils {
         child: SizedBox(
           height: 30,
           child: Center(
-            child: Text(textoBotaoNao, style: TextStyle(color: Colors.white70)),
+            child: Text(textoBotaoNao, style: const TextStyle(color: Colors.white70)),
           ),
         ),
       ),
@@ -64,8 +65,8 @@ class Utils {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             botaoSim,
-            SizedBox(width: 5),
-            botaoNao,
+            ocultarBotaoNao? const SizedBox() : const SizedBox(width: 5),
+            ocultarBotaoNao? const SizedBox() : botaoNao,
           ],
         )
       ],
