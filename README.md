@@ -7,6 +7,12 @@ Este aplicativo foi criado com base no aplicativo de finanças
 [**Mobills**](https://web.mobills.com.br/dashboard), que tem como objetivo 
 melhorar o controle de suas **receitas** e **despesas** mensais.
 
+## Integrantes do Grupo
+
+- RM 344245 - <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/matheus-ciribeli/">Matheus Ciribeli </a>
+- RM 345763 - <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/victor-alves-bugueno-122438144/">Victor Alves Bugueno</a>
+- RM 344869 - <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/victor-dias-6b505275/">Victor Augusto Dias</a>
+
 ## Configurando o aplicativo
 
 Configure a 
