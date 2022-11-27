@@ -1,4 +1,5 @@
 import 'package:controle_financeiro/src/components/app_logo.dart';
+import 'package:controle_financeiro/src/components/button_loading.dart';
 import 'package:controle_financeiro/src/components/labeled_divider.dart';
 import 'package:controle_financeiro/src/components/my_text_field.dart';
 import 'package:controle_financeiro/src/dto/user_dto.dart';
@@ -27,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _senhaNotifier = ValueNotifier<String>('');
   final _confirmacaoSenhaNotifier = ValueNotifier<String>('');
   final _exibirSenhaNotifier = ValueNotifier<bool>(false);
+  final _loadingNotifier = ValueNotifier<bool>(false);
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _senhaController = TextEditingController();
@@ -55,6 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _senhaNotifier.dispose();
     _confirmacaoSenhaNotifier.dispose();
     _exibirSenhaNotifier.dispose();
+    _loadingNotifier.dispose();
     super.dispose();
   }
 
@@ -107,6 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         valido: _validadorEmail(email) == null,
                         controller: _emailController,
                         textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -172,9 +176,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _registrar,
-                      child: const Text('Cadastrar'),
+                    ValueListenableBuilder(
+                      valueListenable: _loadingNotifier,
+                      builder: (_, loading, __) => ElevatedButton(
+                        onPressed: _loadingNotifier.value
+                        ? null
+                        : _registrar,
+                        child: _loadingNotifier.value
+                            ? ButtonLoading()
+                            : const Text('Cadastrar'),
+                      ),
                     ),
                     LabeledDivider(text: 'ou', verticalPadding: 10),
                     ElevatedButton(

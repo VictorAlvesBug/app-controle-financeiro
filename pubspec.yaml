@@ -51,8 +51,6 @@ dependencies:
 
   flutter_speed_dial: ^4.3.0
   simple_rich_text: ^2.0.49
-  network_info_plus: 1.1.0
-  permission_handler: 8.1.6
 
 dev_dependencies:
   flutter_test:

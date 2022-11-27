@@ -25,7 +25,8 @@ class LoginService {
         'idToken': null
       };
     } else {
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
       sharedPreferences.setString('userId', bodyJson['localId']);
       sharedPreferences.setString('displayName', bodyJson['displayName']);
 
@@ -37,14 +38,22 @@ class LoginService {
     }
   }
 
-  String retornarMensagem(String respostaLogin){
-    switch(respostaLogin)
-    {
-      case 'INVALID_EMAIL': return 'Informe um e-mail válido';
-      case 'EMAIL_NOT_FOUND': return 'E-mail ou senha inválidos';
-      case 'INVALID_PASSWORD': return 'E-mail ou senha inválidos';
-      case 'MISSING_PASSWORD': return 'Informe a senha';
-      default: return 'Erro ao realizar login';
+  String retornarMensagem(String respostaLogin) {
+    switch (respostaLogin) {
+      case 'INVALID_EMAIL':
+        return 'Informe um e-mail válido';
+      case 'EMAIL_NOT_FOUND':
+        return 'E-mail ou senha inválidos';
+      case 'INVALID_PASSWORD':
+        return 'E-mail ou senha inválidos';
+      case 'MISSING_PASSWORD':
+        return 'Informe a senha';
+      default:
+        if (respostaLogin.contains('TOO_MANY_ATTEMPTS_TRY_LATER')) {
+          return 'Limite de tentativas excedido, tente novamente mais tarde';
+        }
+
+        return 'Erro ao realizar login';
     }
   }
 

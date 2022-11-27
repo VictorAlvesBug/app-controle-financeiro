@@ -1,4 +1,5 @@
 import 'package:controle_financeiro/src/components/app_logo.dart';
+import 'package:controle_financeiro/src/components/button_loading.dart';
 import 'package:controle_financeiro/src/components/labeled_divider.dart';
 import 'package:controle_financeiro/src/components/my_text_field.dart';
 import 'package:controle_financeiro/src/dto/user_dto.dart';
@@ -23,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailNotifier = ValueNotifier<String>('');
   final _senhaNotifier = ValueNotifier<String>('');
   final _exibirSenhaNotifier = ValueNotifier<bool>(false);
+  final _loadingNotifier = ValueNotifier<bool>(false);
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _senhaController = TextEditingController();
@@ -33,20 +35,24 @@ class _LoginScreenState extends State<LoginScreen> {
     if (settings.arguments != null) {
       UserDTO userDTO = settings.arguments as UserDTO;
 
-      _emailController.value = TextEditingValue(
-          text: userDTO.email,
-          selection: _emailController.selection
-      );
       _emailNotifier.value = userDTO.email;
+      _emailController.value = TextEditingValue(
+          text: _emailNotifier.value, selection: _emailController.selection);
 
-      _senhaController.value = TextEditingValue(
-          text: userDTO.senha,
-          selection: _senhaController.selection
-      );
       _senhaNotifier.value = userDTO.senha;
-
+      _senhaController.value = TextEditingValue(
+          text: _senhaNotifier.value, selection: _senhaController.selection);
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _emailNotifier.dispose();
+    _senhaNotifier.dispose();
+    _exibirSenhaNotifier.dispose();
+    _loadingNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,9 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         iconData: Icons.alternate_email_outlined,
                         valido: _validadorEmail(email) == null,
-                        textCapitalization: TextCapitalization.characters,
                         controller: _emailController,
                         textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -98,8 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onChanged: (value) {
                             _senhaController.value = TextEditingValue(
                                 text: value,
-                                selection: _senhaController.selection
-                            );
+                                selection: _senhaController.selection);
 
                             _senhaNotifier.value = value;
                           },
@@ -126,9 +131,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _logar,
-                      child: const Text('Entrar'),
+                    ValueListenableBuilder(
+                      valueListenable: _loadingNotifier,
+                      builder: (_, loading, __) => ElevatedButton(
+                        onPressed: _loadingNotifier.value
+                            ? null
+                            : _logar,
+                        child: _loadingNotifier.value
+                            ? ButtonLoading()
+                            : const Text('Entrar'),
+                      ),
                     ),
                     LabeledDivider(text: 'ou', verticalPadding: 10),
                     ElevatedButton(
@@ -197,9 +209,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _logar() async {
+    _loadingNotifier.value = true;
     bool valido = _formKey.currentState?.validate() ?? false;
 
     if (!valido) {
+      _loadingNotifier.value = false;
       return;
     }
     dynamic loginResponse =
@@ -211,5 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Utils.message(context, loginResponse['mensagem']);
     }
+
+    _loadingNotifier.value = false;
   }
 }

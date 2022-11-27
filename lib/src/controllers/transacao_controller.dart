@@ -1,3 +1,4 @@
+import 'package:controle_financeiro/src/components/button_loading.dart';
 import 'package:controle_financeiro/src/components/my_text_field.dart';
 import 'package:controle_financeiro/src/dto/saldo_dto.dart';
 import 'package:controle_financeiro/src/dto/transacao_dto.dart';
@@ -18,11 +19,14 @@ class TransacaoController {
 
   TextEditingController dataTransacaoController = TextEditingController();
 
+  final CurrencyTextInputFormatter _formatadorDinheiro =
+  CurrencyTextInputFormatter(
+      locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
+
+  final _loadingNotifier = ValueNotifier<bool>(false);
+
   Future<void> cadastrar(
       BuildContext context, TipoTransacaoEnum tipoTransacao) async {
-    final CurrencyTextInputFormatter formatadorDinheiro =
-        CurrencyTextInputFormatter(
-            locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
 
     tipo = tipoTransacao;
 
@@ -43,7 +47,8 @@ class TransacaoController {
                     minWidth: 250,
                     maxWidth: 350,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: const Color(0xFF444444)),
@@ -53,9 +58,10 @@ class TransacaoController {
                       shrinkWrap: true,
                       children: [
                         Center(
-                          child: Text('Adicionar ${tipoTransacao.name.toLowerCase()}',
-                              style:
-                                  const TextStyle(color: Colors.white70, fontSize: 20)),
+                          child: Text(
+                              'Adicionar ${tipoTransacao.name.toLowerCase()}',
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 20)),
                         ),
                         const SizedBox(height: 20),
                         MyTextField(
@@ -87,21 +93,30 @@ class TransacaoController {
                           },
                           labelText: "Valor",
                           iconData: Icons.monetization_on_outlined,
-                          inputFormatters: [formatadorDinheiro],
+                          inputFormatters: [_formatadorDinheiro],
                           keyboardType: TextInputType.number,
                           onFieldSubmitted: (_) => _cadastrarTransacao(context),
                           textInputAction: TextInputAction.done,
                         ),
                         const SizedBox(height: 40),
-                        ElevatedButton(
-                          child: const SizedBox(
-                            width: double.infinity,
-                            height: 30,
-                            child: Center(
-                              child: Text('Salvar', style: TextStyle(color: Colors.white70)),
-                            ),
+                        ValueListenableBuilder(
+                          valueListenable: _loadingNotifier,
+                          builder: (_, loading, __) => ElevatedButton(
+                            onPressed: _loadingNotifier.value
+                                ? null
+                                : () => _cadastrarTransacao(context),
+                            child: _loadingNotifier.value
+                                ? const ButtonLoading()
+                                : const SizedBox(
+                                    width: double.infinity,
+                                    height: 30,
+                                    child: Center(
+                                      child: Text('Salvar',
+                                          style:
+                                              TextStyle(color: Colors.white70)),
+                                    ),
+                                  ),
                           ),
-                          onPressed: () => _cadastrarTransacao(context),
                         ),
                       ],
                     ),
@@ -135,10 +150,6 @@ class TransacaoController {
     dataTransacao = transacao.data;
     descricao = transacao.descricao;
 
-    final CurrencyTextInputFormatter _formatadorDinheiro =
-        CurrencyTextInputFormatter(
-            locale: 'pt-br', decimalDigits: 2, symbol: "R\$");
-
     return showDialog(
         context: context,
         builder: (context) {
@@ -153,7 +164,8 @@ class TransacaoController {
                     minWidth: 250,
                     maxWidth: 350,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: const Color(0xFF444444)),
@@ -163,8 +175,10 @@ class TransacaoController {
                       shrinkWrap: true,
                       children: [
                         Center(
-                          child: Text('Alterar ${transacao.tipo.name.toLowerCase()}',
-                              style: const TextStyle(color: Colors.white70, fontSize: 20)),
+                          child: Text(
+                              'Alterar ${transacao.tipo.name.toLowerCase()}',
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 20)),
                         ),
                         const SizedBox(height: 20),
                         MyTextField(
@@ -204,15 +218,24 @@ class TransacaoController {
                           textInputAction: TextInputAction.done,
                         ),
                         const SizedBox(height: 40),
-                        ElevatedButton(
-                          child: const SizedBox(
-                            width: double.infinity,
-                            height: 30,
-                            child: Center(
-                              child: Text('Salvar', style: TextStyle(color: Colors.white70)),
+                        ValueListenableBuilder(
+                          valueListenable: _loadingNotifier,
+                          builder: (_, loading, __) => ElevatedButton(
+                            onPressed: _loadingNotifier.value
+                                ? null
+                                : () => _editarTransacao(context),
+                            child: _loadingNotifier.value
+                                ? const ButtonLoading()
+                                : const SizedBox(
+                              width: double.infinity,
+                              height: 30,
+                              child: Center(
+                                child: Text('Salvar',
+                                    style:
+                                    TextStyle(color: Colors.white70)),
+                              ),
                             ),
                           ),
-                          onPressed: () => _editarTransacao(context),
                         ),
                       ],
                     ),
@@ -262,9 +285,11 @@ class TransacaoController {
   }
 
   void _cadastrarTransacao(BuildContext context) async {
+    _loadingNotifier.value = true;
     bool valido = _formKey.currentState?.validate() ?? false;
 
     if (!valido) {
+      _loadingNotifier.value = false;
       return;
     }
     TransacaoDTO transacao = TransacaoDTO(
@@ -277,12 +302,16 @@ class TransacaoController {
       Utils.message(context, mensagem);
       Navigator.pop(context);
     });
+
+    _loadingNotifier.value = false;
   }
 
   void _editarTransacao(BuildContext context) async {
+    _loadingNotifier.value = true;
     bool valido = _formKey.currentState?.validate() ?? false;
 
     if (!valido) {
+      _loadingNotifier.value = false;
       return;
     }
     TransacaoDTO transacao = TransacaoDTO(
@@ -296,6 +325,8 @@ class TransacaoController {
       Utils.message(context, mensagem);
       Navigator.pop(context);
     });
+
+    _loadingNotifier.value = false;
   }
 
   Future<List<TransacaoDTO>> retornarTransacoes(
@@ -314,10 +345,9 @@ class TransacaoController {
   }
 
   Future<String> deletar(BuildContext context, String? codigoTransacao) async {
-    try{
+    try {
       return await ApiService.deletar(codigoTransacao);
-    }
-    catch(error){
+    } catch (error) {
       print(error);
       return "Ocorreu um erro ao deletar a transação";
     }
