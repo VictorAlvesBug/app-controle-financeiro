@@ -38,13 +38,16 @@ flutter upgrade
 flutter pub get
 ```
 
-Execute no **cmd** o seguinte comando e utilize o IP de wifi retornado na 
+Execute no **cmd** o seguinte comando e utilize o IP de Wi-Fi retornado na 
 constante **_wifiIp** do arquivo 
 [api_service.dart](https://github.com/VictorAlvesBug/app-controle-financeiro/blob/master/lib/src/services/api_service.dart)
 
 ```bash
 ipconfig
 ```
+
+É necessário que o computador que está rodando a API esteja conectado à 
+**mesma rede Wi-Fi** que o celular android que está rodando o Aplicativo.
 
 Na barra superior do **Android Studio**, selecione o dispositivo que deseja 
 utilizar e depois clique no ícone **Run**, com o arquivo **main.dart** 
